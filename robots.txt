@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://azzar.co.zw/sitemap.xml
