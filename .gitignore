@@ -2,3 +2,6 @@
 .audit-server.js
 audit/
 
+# Secrets — never commit real API keys
+api/config.php
+

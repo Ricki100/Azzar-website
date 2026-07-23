@@ -1,0 +1,10 @@
+# Defense in depth: even though config.php is gitignored and PHP files are
+# normally executed (not served as text) by a correctly configured server,
+# explicitly block direct access to the config files and this folder's
+# directory listing.
+
+Options -Indexes
+
+<FilesMatch "^config(\.example)?\.php$">
+  Require all denied
+</FilesMatch>

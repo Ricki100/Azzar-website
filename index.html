@@ -145,6 +145,37 @@
           </a>
           <a href="products/" class="btn btn-outline">View Products</a>
         </div>
+
+        <form class="hero-quote" id="heroQuoteForm" novalidate>
+          <div class="hero-quote__row">
+            <div class="hero-quote__field">
+              <label for="heroQuotePerimeter">Perimeter size</label>
+              <select id="heroQuotePerimeter" name="perimeterSize" required>
+                <option value="" disabled selected>Select perimeter size</option>
+                <option value="Under 50m">Under 50m</option>
+                <option value="50m - 100m">50m – 100m</option>
+                <option value="100m - 300m">100m – 300m</option>
+                <option value="300m - 500m">300m – 500m</option>
+                <option value="500m - 1km">500m – 1km</option>
+                <option value="Over 1km">Over 1km</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+            </div>
+            <div class="hero-quote__field">
+              <label for="heroQuoteFirstName">First name</label>
+              <input type="text" id="heroQuoteFirstName" name="firstName" autocomplete="given-name" required />
+            </div>
+            <div class="hero-quote__field">
+              <label for="heroQuoteEmail">Email address</label>
+              <input type="email" id="heroQuoteEmail" name="email" autocomplete="email" required />
+            </div>
+            <button type="submit" class="btn btn-primary hero-quote__submit">
+              <span class="hero-quote__submit-label">Get a Quote</span>
+            </button>
+          </div>
+          <p class="hero-quote__status" role="status" aria-live="polite" hidden></p>
+          <p class="hero-quote__success" hidden>Thanks — we've got your details and will be in touch about your perimeter shortly.</p>
+        </form>
       </div>
     </div>
     <div class="hero__scroll">
@@ -538,6 +569,42 @@
     </div>
   </footer>
 
+  <!-- LEAD MAGNET POPUP -->
+  <div id="leadPopup" class="popup popup--steel" hidden aria-hidden="true">
+    <div class="popup__overlay" data-popup-dismiss></div>
+    <div class="popup__card" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+      <button type="button" class="popup__close" data-popup-dismiss aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="popup__body">
+        <span class="eyebrow">Members-Only &middot; Offers &middot; Advice</span>
+        <h3 id="popupTitle">The Azzar Club</h3>
+        <p>Join Zimbabwe's inner circle for fencing — exclusive discounts, first access to promotions, and practical advice sent straight to your inbox.</p>
+        <form class="popup__form" id="popupForm" novalidate>
+          <div class="popup__field">
+            <label for="popupFirstName">First name</label>
+            <input type="text" id="popupFirstName" name="firstName" autocomplete="given-name" required />
+          </div>
+          <div class="popup__field">
+            <label for="popupEmail">Email address</label>
+            <input type="email" id="popupEmail" name="email" autocomplete="email" required />
+          </div>
+          <button type="submit" class="btn btn-primary popup__submit">
+            <span class="popup__submit-label">Join The Club</span>
+          </button>
+          <p class="popup__consent">By joining, you agree to receive emails from Azzar. You may unsubscribe at any time.</p>
+          <p class="popup__status" role="status" aria-live="polite" hidden></p>
+        </form>
+        <div class="popup__success" hidden>
+          <h3>You're in.</h3>
+          <p>Welcome to the Azzar Club — exclusive offers and fencing tips are headed your way.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="js/main.js"></script>
+  <script src="js/popup.js"></script>
+  <script src="js/hero-quote.js"></script>
 </body>
 </html>
