@@ -1,0 +1,4 @@
+# Local preview and visual review artifacts
+.audit-server.js
+audit/
+

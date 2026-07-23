@@ -19,4 +19,5 @@
   <url><loc>https://azzar.co.zw/projects</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
   <url><loc>https://azzar.co.zw/faq</loc><priority>0.75</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/contact</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://azzar.co.zw/privacy</loc><priority>0.4</priority><changefreq>yearly</changefreq></url>
 </urlset>
