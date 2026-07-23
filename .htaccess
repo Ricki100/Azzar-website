@@ -1,0 +1,22 @@
+# ==================================================
+# Azzar Fencing & Steel — Clean URLs (remove .html)
+# ==================================================
+
+RewriteEngine On
+
+# Avoid Apache's MultiViews content negotiation interfering with the rules below
+Options -MultiViews
+
+# 1. If someone requests /page.html directly, 301-redirect to /page
+#    (keeps a single canonical URL per page for SEO, avoids duplicate content)
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# 2. Internally serve the matching .html file when /page is requested,
+#    without the .html ever showing in the browser's address bar
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*?)/?$ $1.html [L]
+
+# Custom 404 (optional — point this at a real error page if/when one exists)
+# ErrorDocument 404 /404.html
