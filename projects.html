@@ -7,17 +7,17 @@
   <link rel="canonical" href="https://azzar.co.zw/projects"/>
   <link rel="stylesheet" href="css/style.css"/>
   <style>
-    .projects-masonry { columns: 3; column-gap: 20px; margin-top: 60px; }
-    .project-item { break-inside: avoid; margin-bottom: 20px; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; }
-    .project-item img { width: 100%; display: block; transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
-    .project-item video { width: 100%; display: block; background: #111; }
+    .projects-masonry { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 340px; gap: 20px; margin-top: 60px; }
+    .project-item { height: 340px; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; }
+    .project-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .project-item video { width: 100%; height: 100%; object-fit: cover; display: block; background: #111; }
     .project-item:hover img { transform: scale(1.04); }
     .project-item__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,26,0.8) 0%, transparent 60%); opacity: 0; transition: opacity 0.4s; display: flex; align-items: flex-end; padding: 24px; pointer-events: none; }
     .project-item:hover .project-item__overlay { opacity: 1; }
     .project-item__label { color: white; font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem; }
     .project-item__tag { font-size: 0.72rem; color: #73b23d; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 4px; }
-    @media (max-width: 900px) { .projects-masonry { columns: 2; } }
-    @media (max-width: 600px) { .projects-masonry { columns: 1; } }
+    @media (max-width: 900px) { .projects-masonry { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 320px; } .project-item { height: 320px; } }
+    @media (max-width: 600px) { .projects-masonry { grid-template-columns: 1fr; } }
     .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
     .filter-btn { padding: 9px 22px; border-radius: 100px; font-size: 0.82rem; font-weight: 600; border: 1.5px solid var(--border); color: var(--grey); background: var(--white); cursor: pointer; transition: all 0.3s; }
     .filter-btn.active, .filter-btn:hover { background: var(--green); color: white; border-color: var(--green); }
@@ -50,7 +50,7 @@
   </div>
 
   <section class="page-hero">
-    <div class="page-hero__bg" style="background-image:url('images/WhatsApp Image 2026-03-23 at 8.09.41 AM.webp')"></div>
+    <div class="page-hero__bg" style="background-image:url('images/real/field-fence/field-fence-installation-01.jpeg')"></div>
     <div class="container page-hero__content">
       <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><span style="color:rgba(255,255,255,0.7)">Projects</span></div>
       <span class="eyebrow">Our Portfolio</span>
@@ -70,16 +70,21 @@
         <div class="project-item"><img src="images/Mahetshe primary Bulawayo/WhatsApp Image 2026-03-30 at 9.13.14 AM.jpeg" alt="Mahetshe Primary School diamond mesh perimeter fencing"/><div class="project-item__overlay"><div><span class="project-item__tag">Diamond Mesh · School</span><div class="project-item__label">Mahetshe Primary, Bulawayo</div></div></div></div>
         <div class="project-item"><video src="images/Mahetshe primary Bulawayo/WhatsApp Video 2026-03-30 at 9.13.15 AM.mp4" controls muted preload="metadata" playsinline aria-label="Mahetshe Primary School fencing walkthrough"></video><div class="project-item__overlay"><div><span class="project-item__tag">Video · School Project</span><div class="project-item__label">Mahetshe Primary Walkthrough</div></div></div></div>
         <div class="project-item"><img src="images/Mahetshe primary Bulawayo/WhatsApp Image 2026-03-30 at 9.13.13 AM.jpeg" alt="Mahetshe Primary School fence line detail"/><div class="project-item__overlay"><div><span class="project-item__tag">Diamond Mesh · Institution</span><div class="project-item__label">School Boundary Detail</div></div></div></div>
-        <div class="project-item"><img src="images/WhatsApp Image 2026-03-23 at 8.09.41 AM.webp" alt="Farm field fence installation Zimbabwe"/><div class="project-item__overlay"><div><span class="project-item__tag">Field Fence · Farm</span><div class="project-item__label">Field Fence Installation</div></div></div></div>
-        <div class="project-item"><img src="images/WhatsApp Image 2026-03-23 at 8.09.13 AM.webp" alt="Clearview fencing commercial property Zimbabwe"/><div class="project-item__overlay"><div><span class="project-item__tag">Clearview · Commercial</span><div class="project-item__label">Security Fencing Installation</div></div></div></div>
-        <div class="project-item"><img src="images/IMG_7079-1024x1536.webp" alt="Diamond mesh fencing stock at Azzar"/><div class="project-item__overlay"><div><span class="project-item__tag">Diamond Mesh · Stock</span><div class="project-item__label">Ready Material Supply</div></div></div></div>
-        <div class="project-item"><img src="images/WhatsApp Image 2026-03-23 at 8.08.15 AM.webp" alt="Agricultural fencing Zimbabwe"/><div class="project-item__overlay"><div><span class="project-item__tag">Barbed Wire · Agricultural</span><div class="project-item__label">Agricultural Fencing Detail</div></div></div></div>
-        <div class="project-item"><img src="images/WhatsApp Image 2026-03-23 at 8.05.43 AM(1).webp" alt="Razor wire security perimeter Zimbabwe"/><div class="project-item__overlay"><div><span class="project-item__tag">Razor Wire · Industrial</span><div class="project-item__label">Security Perimeter Detail</div></div></div></div>
+        <div class="project-item"><img src="images/real/field-fence/field-fence-installation-01.jpeg" alt="Azzar field fence installed across rural land"/><div class="project-item__overlay"><div><span class="project-item__tag">Field Fence · Farm</span><div class="project-item__label">Rural Boundary Installation</div></div></div></div>
+        <div class="project-item"><img src="images/real/clearvue/clearvue-residential-installation-02.jpeg" alt="Azzar ClearVue high-security fence installation"/><div class="project-item__overlay"><div><span class="project-item__tag">ClearVue · Security</span><div class="project-item__label">ClearVue Perimeter</div></div></div></div>
+        <div class="project-item"><img src="images/real/diamond-mesh/diamond-mesh-stock-yard-02.jpeg" alt="Diamond mesh rolls manufactured and stocked by Azzar"/><div class="project-item__overlay"><div><span class="project-item__tag">Diamond Mesh · Stock</span><div class="project-item__label">Harare Yard Stock</div></div></div></div>
+        <div class="project-item"><img src="images/real/diamond-mesh/diamond-mesh-gate-installation-01.jpeg" alt="Azzar diamond mesh gate and agricultural perimeter"/><div class="project-item__overlay"><div><span class="project-item__tag">Diamond Mesh · Farm</span><div class="project-item__label">Farm Gate Installation</div></div></div></div>
+        <div class="project-item"><img src="images/real/clearvue/clearvue-electric-security-installation-01.jpeg" alt="Azzar ClearVue fence with electric security topping"/><div class="project-item__overlay"><div><span class="project-item__tag">ClearVue · Electric</span><div class="project-item__label">Layered Security Installation</div></div></div></div>
         <div class="project-item"><img src="images/IMG_7105-1536x1024.webp" alt="Azzar workshop mesh fabrication in progress"/><div class="project-item__overlay"><div><span class="project-item__tag">Fabrication · Workshop</span><div class="project-item__label">Mesh Production</div></div></div></div>
-        <div class="project-item"><img src="images/WhatsApp Image 2026-03-23 at 8.08.15 AM(1).webp" alt="Barbed wire farm fence Zimbabwe"/><div class="project-item__overlay"><div><span class="project-item__tag">Barbed Wire · Farm</span><div class="project-item__label">Barbed-wire Boundary Detail</div></div></div></div>
-        <div class="project-item"><img src="images/WhatsApp Image 2026-03-23 at 8.09.13 AM.webp" alt="School security fencing Zimbabwe"/><div class="project-item__overlay"><div><span class="project-item__tag">Clearview · School</span><div class="project-item__label">Mesh Fencing Installation</div></div></div></div>
-        <div class="project-item"><img src="images/WhatsApp Image 2026-03-23 at 8.09.41 AM.webp" alt="Game fence wildlife reserve Zimbabwe"/><div class="project-item__overlay"><div><span class="project-item__tag">Game Fence · Wildlife</span><div class="project-item__label">Field Fence Installation</div></div></div></div>
+        <div class="project-item"><img src="images/real/diamond-mesh/diamond-mesh-barbed-security-01.jpeg" alt="Azzar diamond mesh boundary topped with barbed wire"/><div class="project-item__overlay"><div><span class="project-item__tag">Diamond Mesh · Barbed Wire</span><div class="project-item__label">Farm Security Boundary</div></div></div></div>
+        <div class="project-item"><img src="images/real/gates/diamond-mesh-double-gates-01.jpeg" alt="Double-leaf tubular steel gates with diamond mesh infill fabricated by Azzar"/><div class="project-item__overlay"><div><span class="project-item__tag">Gate Fabrication · Diamond Mesh</span><div class="project-item__label">Double-leaf Mesh Gates</div></div></div></div>
+        <div class="project-item"><img src="images/razor-wire/razor-wire-security-gate.webp" alt="Razor wire installed above a high-security steel gate"/><div class="project-item__overlay"><div><span class="project-item__tag">Razor Wire</span><div class="project-item__label">High-security Boundary</div></div></div></div>
         <div class="project-item"><img src="images/IMG_7256-1024x1536.webp" alt="Azzar team member handling diamond mesh roll"/><div class="project-item__overlay"><div><span class="project-item__tag">Team · Materials</span><div class="project-item__label">Mesh Preparation</div></div></div></div>
+        <div class="project-item"><img src="images/real/electric-fence/electric-fence-gate-installation-01.jpeg" alt="Electric fence installed above a residential gate by Azzar"/><div class="project-item__overlay"><div><span class="project-item__tag">Electric Fence · Gate</span><div class="project-item__label">Residential Electric Security</div></div></div></div>
+        <div class="project-item"><img src="images/real/electric-fence/electric-fence-wall-installation-01.jpeg" alt="Azzar electric fence installed above a masonry wall"/><div class="project-item__overlay"><div><span class="project-item__tag">Electric Fence · Wall</span><div class="project-item__label">Wall-top Electric Security</div></div></div></div>
+        <div class="project-item"><video src="images/real/video/azzar-july-site-01.mp4" controls muted preload="metadata" playsinline aria-label="Azzar electric fence energiser installation"></video><div class="project-item__overlay"><div><span class="project-item__tag">Video · Electric Fence</span><div class="project-item__label">Energiser Installation</div></div></div></div>
+        <div class="project-item"><video src="images/real/video/azzar-july-site-02.mp4" controls muted preload="metadata" playsinline aria-label="Azzar gate motor installation"></video><div class="project-item__overlay"><div><span class="project-item__tag">Video · Gate Automation</span><div class="project-item__label">Sliding Gate Motor Installation</div></div></div></div>
+        <div class="project-item"><video src="images/real/video/azzar-fencing-01.mp4" controls muted preload="metadata" playsinline aria-label="Azzar Fencing and Steel project montage"></video><div class="project-item__overlay"><div><span class="project-item__tag">Video · Azzar in Action</span><div class="project-item__label">Fencing Project Montage</div></div></div></div>
       </div>
 
       <div style="text-align:center;margin-top:60px;padding:40px;background:var(--off-white);border-radius:12px;border:1px solid var(--border);">
@@ -88,6 +93,14 @@
         <p style="color:var(--muted);max-width:500px;margin:0 auto 24px;">Tell us about your property, farm, school, or business premises and we will recommend the right fencing specification for the job.</p>
         <a href="contact.html" class="btn btn-primary">Get Your Project Started <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
+    </div>
+  </section>
+
+  <section class="proof-strip" aria-label="Customer testimonial">
+    <div class="container proof-strip__inner reveal">
+      <span class="proof-strip__label">Project experience</span>
+      <blockquote>Professional from start to finish. They assessed our site, quoted fairly, delivered on time, and the installation is solid. We’ve now used Azzar on three separate projects.</blockquote>
+      <div class="proof-strip__author"><span class="proof-strip__avatar">S</span><div><strong>S. Dube</strong><span>Property Developer, Bulawayo</span></div></div>
     </div>
   </section>
 

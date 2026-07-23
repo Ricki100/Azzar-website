@@ -26,6 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.querySelectorAll('[data-current-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 
+  /* ---- Homepage hero video ---- */
+  const heroVideo = document.querySelector('#heroVideo');
+  if (heroVideo) {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const saveData = navigator.connection?.saveData === true;
+    if (!prefersReducedMotion && !saveData) {
+      const source = heroVideo.querySelector('source[data-src]');
+      if (source) {
+        source.src = source.dataset.src;
+        heroVideo.load();
+        heroVideo.play().catch(() => {});
+      }
+    }
+  }
+
   /* ---- Navigation: Scroll State ---- */
   const nav = document.querySelector('.nav');
   const hamburger = document.querySelector('.nav__hamburger');
