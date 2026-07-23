@@ -1436,3 +1436,87 @@ p { line-height: 1.8; }
   *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
   .hero__media video { display:none; }
 }
+
+/* ---- Nav Dropdowns (Products / Industries) ---- */
+.nav__item { position: relative; display: flex; align-items: center; }
+.nav__item .nav__link { display: inline-flex; align-items: center; gap: 5px; }
+.nav__caret { flex-shrink: 0; transition: transform 0.3s var(--ease); }
+.nav__item.has-dropdown:hover .nav__caret,
+.nav__item.has-dropdown:focus-within .nav__caret,
+.nav__item.has-dropdown.open .nav__caret { transform: rotate(180deg); }
+.nav__dropdown {
+  position: absolute;
+  top: 100%; left: 50%;
+  min-width: 248px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-md);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-6px);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0s linear 0.25s;
+}
+.nav__item.has-dropdown:hover .nav__dropdown,
+.nav__item.has-dropdown:focus-within .nav__dropdown,
+.nav__item.has-dropdown.open .nav__dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0s;
+}
+.nav__dropdown-link {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--grey);
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.nav__dropdown-link:hover,
+.nav__dropdown-link:focus-visible { background: var(--green-light); color: var(--green-dark); }
+.nav__dropdown-link.active { color: var(--green); font-weight: 600; }
+.nav__dropdown-link--all {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  color: var(--green);
+  font-weight: 600;
+}
+.nav__dropdown-link--all:hover { background: var(--green-light); color: var(--green-dark); }
+
+/* ---- Mobile Nav Accordion (Products / Industries) ---- */
+.nav__mobile-item { border-bottom: 1px solid var(--border); }
+.nav__mobile-item .nav__mobile-link { border-bottom: none; padding-bottom: 0; }
+.nav__mobile-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 20px; }
+.nav__mobile-row .nav__mobile-link { flex: 1; }
+.nav__mobile-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; flex-shrink: 0;
+  color: var(--dark);
+}
+.nav__mobile-toggle svg { transition: transform 0.3s var(--ease); }
+.nav__mobile-item.open .nav__mobile-toggle svg { transform: rotate(180deg); }
+.nav__mobile-submenu {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease-out);
+}
+.nav__mobile-submenu > div { overflow: hidden; }
+.nav__mobile-item.open .nav__mobile-submenu { grid-template-rows: 1fr; }
+.nav__mobile-sublinks { display: flex; flex-direction: column; gap: 14px; padding: 2px 0 22px 4px; }
+.nav__mobile-sublink { font-family: var(--font-body); font-size: 0.98rem; font-weight: 500; color: var(--muted); }
+.nav__mobile-sublink:hover, .nav__mobile-sublink.active { color: var(--green); }
+
+@media (max-width: 900px) {
+  .nav__dropdown { display: none; }
+}

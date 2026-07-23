@@ -261,6 +261,66 @@ Please contact me to discuss the right solution.`;
     });
   }
 
+  /* ---- Nav Dropdowns: Products / Industries ---- */
+  const dropdownItems = document.querySelectorAll('.nav__item.has-dropdown');
+  const cannotHover = window.matchMedia('(hover: none)').matches;
+  const closeAllDropdowns = () => {
+    dropdownItems.forEach(item => {
+      item.classList.remove('open');
+      item.querySelector('.nav__link')?.setAttribute('aria-expanded', 'false');
+    });
+  };
+  dropdownItems.forEach(item => {
+    const trigger = item.querySelector('.nav__link');
+    const panel = item.querySelector('.nav__dropdown');
+    if (!trigger || !panel) return;
+    trigger.setAttribute('aria-haspopup', 'true');
+    trigger.setAttribute('aria-expanded', 'false');
+    if (cannotHover) {
+      trigger.addEventListener('click', event => {
+        if (!item.classList.contains('open')) {
+          event.preventDefault();
+          closeAllDropdowns();
+          item.classList.add('open');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    } else {
+      item.addEventListener('mouseenter', () => trigger.setAttribute('aria-expanded', 'true'));
+      item.addEventListener('mouseleave', () => trigger.setAttribute('aria-expanded', 'false'));
+      item.addEventListener('focusin', () => trigger.setAttribute('aria-expanded', 'true'));
+      item.addEventListener('focusout', event => {
+        if (!item.contains(event.relatedTarget)) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+  if (dropdownItems.length) {
+    document.addEventListener('click', event => {
+      dropdownItems.forEach(item => {
+        if (!item.contains(event.target)) {
+          item.classList.remove('open');
+          item.querySelector('.nav__link')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeAllDropdowns();
+    });
+  }
+
+  /* ---- Mobile Nav Accordion: Products / Industries ---- */
+  document.querySelectorAll('.nav__mobile-item').forEach(item => {
+    const toggle = item.querySelector('.nav__mobile-toggle');
+    if (!toggle) return;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.addEventListener('click', event => {
+      event.preventDefault();
+      const isOpen = item.classList.contains('open');
+      item.classList.toggle('open', !isOpen);
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
   const loadFacebook = document.querySelector('#loadFacebook');
   if (loadFacebook) {
     loadFacebook.addEventListener('click', () => {
