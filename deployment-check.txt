@@ -1,0 +1,3 @@
+AZZAR DEPLOYMENT CHECK
+Version: azzar-2026-07-23-01
+Purpose: Confirms that the latest GitHub main branch has been deployed to the live website.
