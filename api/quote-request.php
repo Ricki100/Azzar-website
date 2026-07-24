@@ -76,6 +76,28 @@ if (mb_strlen($firstName) > 100 || mb_strlen($email) > 200) {
     respond(400, ['success' => false, 'message' => 'invalid_input']);
 }
 
+// Brevo's "Contact added to a list" automation trigger only fires on the
+// transition from not-on-list to on-list. A returning lead (same email,
+// new/different quote) is already a list member, so a plain upsert below
+// would silently update their record without ever notifying sales again.
+// Force that transition every time by removing them from the list first
+// (best-effort — fine if they were never on it) immediately before re-adding.
+$removeCh = curl_init("https://api.brevo.com/v3/contacts/lists/{$listId}/contacts/remove");
+curl_setopt_array($removeCh, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => json_encode(['emails' => [$email]]),
+    CURLOPT_HTTPHEADER => [
+        'api-key: ' . $apiKey,
+        'Content-Type: application/json',
+        'Accept: application/json',
+    ],
+    CURLOPT_CONNECTTIMEOUT => 8,
+    CURLOPT_TIMEOUT => 12,
+]);
+curl_exec($removeCh);
+curl_close($removeCh);
+
 $payload = [
     'email' => $email,
     'attributes' => [
