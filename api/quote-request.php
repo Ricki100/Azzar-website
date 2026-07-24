@@ -1,12 +1,16 @@
 <?php
 /**
- * Hero "Get a Quote" widget → Brevo contact sync.
+ * Hero "Get a Quote" widget → Brevo contact sync + direct sales notification.
  *
  * Receives { firstName, email, perimeterSize } from js/hero-quote.js. This
  * is a hotter, quote-intent lead than the newsletter popup, so it goes to
- * its own Brevo list (BREVO_QUOTE_LIST_ID) with its own LEAD_SOURCE, so
- * Azzar can build a different automation on it (e.g. notify sales + confirm
- * to the customer) instead of the newsletter/guide automation.
+ * its own Brevo list (BREVO_QUOTE_LIST_ID) for CRM record-keeping, with its
+ * own LEAD_SOURCE. Sales gets notified directly by this script via Brevo's
+ * transactional email API — not via a Brevo automation — because automation
+ * "Notify by email" steps personalize using the RECIPIENT's own contact
+ * attributes, not the lead who triggered it, once the recipient is a fixed
+ * address different from the lead. Sending the email ourselves, right here,
+ * with the data we already have from the form, sidesteps that entirely.
  */
 
 declare(strict_types=1);
@@ -132,9 +136,41 @@ if ($response === false) {
     respond(502, ['success' => false, 'message' => 'brevo_unreachable']);
 }
 
-if ($httpCode >= 200 && $httpCode < 300) {
-    respond(200, ['success' => true]);
+if ($httpCode < 200 || $httpCode >= 300) {
+    error_log('Brevo quote-request: unexpected response ' . $httpCode . ' - ' . $response);
+    respond(502, ['success' => false, 'message' => 'brevo_error']);
 }
 
-error_log('Brevo quote-request: unexpected response ' . $httpCode . ' - ' . $response);
-respond(502, ['success' => false, 'message' => 'brevo_error']);
+// Contact saved to the CRM successfully — now notify sales directly.
+$emailPayload = [
+    'sender' => ['name' => 'Azzar Website', 'email' => 'sales@azzar.co.zw'],
+    'to' => [['email' => 'sales@azzar.co.zw', 'name' => 'Azzar Sales']],
+    'subject' => 'New Quotation Request - ' . $firstName,
+    'htmlContent' => '<p><strong>New quote request from the website</strong></p>'
+        . '<p>Name: ' . htmlspecialchars($firstName, ENT_QUOTES) . '<br>'
+        . 'Email: ' . htmlspecialchars($email, ENT_QUOTES) . '<br>'
+        . 'Perimeter size: ' . htmlspecialchars($perimeterSize, ENT_QUOTES) . '</p>',
+];
+
+$mailCh = curl_init('https://api.brevo.com/v3/smtp/email');
+curl_setopt_array($mailCh, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => json_encode($emailPayload),
+    CURLOPT_HTTPHEADER => [
+        'api-key: ' . $apiKey,
+        'Content-Type: application/json',
+        'Accept: application/json',
+    ],
+    CURLOPT_CONNECTTIMEOUT => 8,
+    CURLOPT_TIMEOUT => 12,
+]);
+$mailResponse = curl_exec($mailCh);
+$mailHttpCode = (int) curl_getinfo($mailCh, CURLINFO_HTTP_CODE);
+curl_close($mailCh);
+
+if ($mailHttpCode < 200 || $mailHttpCode >= 300) {
+    error_log('Brevo quote-request: sales notification email failed ' . $mailHttpCode . ' - ' . $mailResponse);
+}
+
+respond(200, ['success' => true]);
