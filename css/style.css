@@ -1322,8 +1322,17 @@ p { line-height: 1.8; }
   :root { --section-pad: 70px; --gutter: 24px; }
   .nav__links, .nav__cta { display: none; }
   .nav__hamburger { display: flex; }
-  .hero { min-height: 600px; }
+  .hero {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: visible;
+    padding: 40px 0 56px;
+  }
+  .hero__scroll { display: none; }
   .hero__actions { flex-direction: column; align-items: flex-start; }
+  .hero-quote { margin-top: 24px; }
+  .hero-quote__row { padding: 14px; }
   .products-grid { grid-template-columns: 1fr; }
   .industries-grid { grid-template-columns: 1fr; }
   .real-media-grid,
@@ -1501,12 +1510,28 @@ body.popup-open { overflow: hidden; }
 
 @media (max-width: 600px) {
   .popup { padding: 14px; align-items: flex-end; }
-  .popup__card { max-width: 100%; border-radius: 14px 14px 0 0; }
-  .popup__body { padding: 36px 24px 28px; }
+  .popup__card { max-width: 100%; max-height: 88svh; overflow-y: auto; border-radius: 14px 14px 0 0; }
+  .popup__body { padding: 32px 22px 24px; }
   .popup__field input { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .popup__overlay, .popup__card { animation: none; }
+}
+
+/* ---- Section header: heading + trailing button/text, wraps cleanly ---- */
+.section__header--split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  max-width: 100%;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+@media (max-width: 700px) {
+  .section__header--split { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .section__header--split > p,
+  .section__header--split > div:last-child { max-width: 100%; text-align: left !important; }
+  .section__header--split > a.btn { margin-top: 4px; }
 }
 
 /* ---- Popup skin: "Azzar Club" — brushed steel / premium ---- */
@@ -1617,9 +1642,9 @@ body.popup-open { overflow: hidden; }
 .hero-quote__success { margin-top: 10px; font-size: 0.9rem; font-weight: 600; color: #fff; }
 
 @media (max-width: 700px) {
-  .hero-quote__row { flex-direction: column; align-items: stretch; padding: 14px; }
-  .hero-quote__field { min-width: 0; }
-  .hero-quote__submit { width: 100%; justify-content: center; }
+  .hero-quote__row { flex-direction: column; align-items: stretch; gap: 10px; padding: 14px; }
+  .hero-quote__field { flex: none; min-width: 0; }
+  .hero-quote__submit { flex: none; width: 100%; justify-content: center; }
 }
 
 /* ---- Nav Dropdowns (Products / Industries) ---- */
