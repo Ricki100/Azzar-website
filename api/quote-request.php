@@ -53,10 +53,21 @@ if (!is_array($input)) {
 
 $firstName = trim((string) ($input['firstName'] ?? ''));
 $email = trim((string) ($input['email'] ?? ''));
+$fenceType = trim((string) ($input['fenceType'] ?? ''));
 $perimeterSize = trim((string) ($input['perimeterSize'] ?? ''));
 
 // Whitelist — must match the <option> values in index.html exactly. Keeps
 // junk/arbitrary strings out of the CRM field.
+$allowedFenceTypes = [
+    'Clearview Fencing',
+    'Diamond Mesh Fencing',
+    'Field / Game Fence',
+    'Razor Wire',
+    'Barbed Wire',
+    'Electric Fencing',
+    'Not sure - need advice',
+];
+
 $allowedSizes = [
     'Under 50m',
     '50m - 100m',
@@ -71,6 +82,7 @@ if (
     $firstName === ''
     || $email === ''
     || !filter_var($email, FILTER_VALIDATE_EMAIL)
+    || !in_array($fenceType, $allowedFenceTypes, true)
     || !in_array($perimeterSize, $allowedSizes, true)
 ) {
     respond(400, ['success' => false, 'message' => 'invalid_input']);
@@ -107,6 +119,7 @@ $payload = [
     'attributes' => [
         'FIRSTNAME' => $firstName,
         'LEAD_SOURCE' => 'Hero Quick Quote',
+        'FENCE_TYPE' => $fenceType,
         'PERIMETER_SIZE' => $perimeterSize,
     ],
     'listIds' => [$listId],
@@ -149,6 +162,7 @@ $emailPayload = [
     'htmlContent' => '<p><strong>New quote request from the website</strong></p>'
         . '<p>Name: ' . htmlspecialchars($firstName, ENT_QUOTES) . '<br>'
         . 'Email: ' . htmlspecialchars($email, ENT_QUOTES) . '<br>'
+        . 'Fence type: ' . htmlspecialchars($fenceType, ENT_QUOTES) . '<br>'
         . 'Perimeter size: ' . htmlspecialchars($perimeterSize, ENT_QUOTES) . '</p>',
 ];
 

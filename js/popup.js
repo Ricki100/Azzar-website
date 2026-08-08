@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const firstName = form.firstName.value.trim();
       const email = form.email.value.trim();
+      const marketingConsent = form.marketingConsent.checked;
 
       submitBtn.disabled = true;
       if (submitLabel) submitLabel.textContent = 'Sending...';
@@ -103,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch('/api/subscribe.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ firstName, email, source: 'Homepage Popup' })
+          body: JSON.stringify({ firstName, email, source: 'Homepage Popup', marketingConsent })
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || !data.success) throw new Error(data.message || 'subscribe_failed');

@@ -3,7 +3,20 @@
    Premium Website | Southern Africa's Best
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+@font-face {
+  font-family: 'Syne';
+  src: url('../fonts/syne-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+}
 
 /* ---- CSS Variables ---- */
 :root {
@@ -1495,7 +1508,9 @@ body.popup-open { overflow: hidden; }
 .popup__field input:invalid:not(:placeholder-shown) { border-color: #c0392b; }
 .popup__submit { width: 100%; justify-content: center; margin-top: 6px; }
 .popup__submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-.popup__consent { margin-top: 14px; font-size: 0.74rem; line-height: 1.6; color: var(--muted); }
+.popup__consent { display: flex; align-items: flex-start; gap: 9px; margin: 14px 0; font-size: 0.74rem; line-height: 1.6; color: var(--muted); cursor: pointer; }
+.popup__consent input { flex: 0 0 auto; margin-top: 3px; accent-color: var(--green); }
+.popup__consent a, .hero-quote__privacy a { color: inherit; text-decoration: underline; }
 .popup__status { margin-top: 12px; font-size: 0.85rem; font-weight: 600; }
 .popup__status.is-error { color: #c0392b; }
 .popup__status.is-info { color: var(--muted); }
@@ -1605,7 +1620,7 @@ body.popup-open { overflow: hidden; }
 }
 
 /* ---- Hero Quick Quote ---- */
-.hero-quote { margin-top: 32px; max-width: 720px; animation: fadeUp 0.9s var(--ease-out) 0.95s both; }
+.hero-quote { margin-top: 32px; max-width: 900px; animation: fadeUp 0.9s var(--ease-out) 0.95s both; }
 .hero-quote__row {
   display: flex; flex-wrap: wrap; align-items: end; gap: 12px;
   background: rgba(255,255,255,0.07);
@@ -1637,6 +1652,7 @@ body.popup-open { overflow: hidden; }
 .hero-quote__submit { flex: 0 0 auto; white-space: nowrap; padding: 12px 26px; }
 .hero-quote__submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .hero-quote__status { margin-top: 10px; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.75); }
+.hero-quote__privacy { margin-top: 10px; max-width: 760px; font-size: 0.72rem; line-height: 1.5; color: rgba(255,255,255,0.68); }
 .hero-quote__status.is-error { color: #ffb4b4; }
 .hero-quote__status.is-error a { color: #fff; }
 .hero-quote__success { margin-top: 10px; font-size: 0.9rem; font-weight: 600; color: #fff; }

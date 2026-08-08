@@ -6,11 +6,22 @@
 document.addEventListener('DOMContentLoaded', () => {
   const config = window.AZZAR_CONFIG || {};
   const attributionKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','gbraid','wbraid','fbclid'];
+  const ATTRIBUTION_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+  const attributionSavedAt = Number(localStorage.getItem('azzar_attribution_saved_at') || 0);
+  if (attributionSavedAt && Date.now() - attributionSavedAt > ATTRIBUTION_TTL_MS) {
+    attributionKeys.forEach(key => localStorage.removeItem(`azzar_${key}`));
+    localStorage.removeItem('azzar_first_page');
+    localStorage.removeItem('azzar_first_referrer');
+    localStorage.removeItem('azzar_attribution_saved_at');
+  }
   const query = new URLSearchParams(window.location.search);
   const attribution = {};
   attributionKeys.forEach(key => {
     const incoming = query.get(key);
-    if (incoming) localStorage.setItem(`azzar_${key}`, incoming);
+    if (incoming) {
+      localStorage.setItem(`azzar_${key}`, incoming);
+      localStorage.setItem('azzar_attribution_saved_at', String(Date.now()));
+    }
     attribution[key] = incoming || localStorage.getItem(`azzar_${key}`) || '';
   });
   if (!localStorage.getItem('azzar_first_page')) {

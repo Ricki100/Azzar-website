@@ -52,11 +52,12 @@ if (!is_array($input)) {
 $firstName = trim((string) ($input['firstName'] ?? ''));
 $email = trim((string) ($input['email'] ?? ''));
 $source = trim((string) ($input['source'] ?? 'Homepage Popup'));
+$marketingConsent = ($input['marketingConsent'] ?? false) === true;
 if ($source === '') {
     $source = 'Homepage Popup';
 }
 
-if ($firstName === '' || $email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if ($firstName === '' || $email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || !$marketingConsent) {
     respond(400, ['success' => false, 'message' => 'invalid_input']);
 }
 

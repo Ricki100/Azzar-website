@@ -146,8 +146,21 @@
           <a href="products/" class="btn btn-outline">View Products</a>
         </div>
 
-        <form class="hero-quote" id="heroQuoteForm" novalidate>
+        <form class="hero-quote" id="heroQuoteForm" method="post" novalidate>
           <div class="hero-quote__row">
+            <div class="hero-quote__field">
+              <label for="heroQuoteFenceType">Fence type</label>
+              <select id="heroQuoteFenceType" name="fenceType" required>
+                <option value="" disabled selected>Select fence type</option>
+                <option value="Clearview Fencing">Clearview Fencing</option>
+                <option value="Diamond Mesh Fencing">Diamond Mesh Fencing</option>
+                <option value="Field / Game Fence">Field / Game Fence</option>
+                <option value="Razor Wire">Razor Wire</option>
+                <option value="Barbed Wire">Barbed Wire</option>
+                <option value="Electric Fencing">Electric Fencing</option>
+                <option value="Not sure - need advice">Not sure — need advice</option>
+              </select>
+            </div>
             <div class="hero-quote__field">
               <label for="heroQuotePerimeter">Perimeter size</label>
               <select id="heroQuotePerimeter" name="perimeterSize" required>
@@ -173,6 +186,7 @@
               <span class="hero-quote__submit-label">Get a Quote</span>
             </button>
           </div>
+          <p class="hero-quote__privacy">We use these details to prepare and follow up your quote through Azzar and our email service provider, Brevo. See our <a href="privacy">privacy notice</a>.</p>
           <p class="hero-quote__status" role="status" aria-live="polite" hidden></p>
           <p class="hero-quote__success" hidden>Thanks — we've got your details and will be in touch about your perimeter shortly.</p>
         </form>
@@ -564,7 +578,7 @@
       </div>
       <div class="footer__bottom">
         <p>&copy; 2025 Azzar Fencing and Steel. All rights reserved.</p>
-        <a href="contact">Privacy Policy</a>
+        <a href="privacy">Privacy Policy</a>
       </div>
     </div>
   </footer>
@@ -580,7 +594,7 @@
         <span class="eyebrow">Members-Only &middot; Offers &middot; Advice</span>
         <h3 id="popupTitle">The Azzar Club</h3>
         <p>Join Zimbabwe's inner circle for fencing — exclusive discounts, first access to promotions, and practical advice sent straight to your inbox.</p>
-        <form class="popup__form" id="popupForm" novalidate>
+        <form class="popup__form" id="popupForm" method="post" novalidate>
           <div class="popup__field">
             <label for="popupFirstName">First name</label>
             <input type="text" id="popupFirstName" name="firstName" autocomplete="given-name" required />
@@ -589,10 +603,13 @@
             <label for="popupEmail">Email address</label>
             <input type="email" id="popupEmail" name="email" autocomplete="email" required />
           </div>
+          <label class="popup__consent">
+            <input type="checkbox" name="marketingConsent" value="yes" required>
+            <span>Yes, send me Azzar offers, product news and practical fencing advice by email. I can unsubscribe at any time. See the <a href="privacy">privacy notice</a>.</span>
+          </label>
           <button type="submit" class="btn btn-primary popup__submit">
             <span class="popup__submit-label">Join The Club</span>
           </button>
-          <p class="popup__consent">By joining, you agree to receive emails from Azzar. You may unsubscribe at any time.</p>
           <p class="popup__status" role="status" aria-live="polite" hidden></p>
         </form>
         <div class="popup__success" hidden>

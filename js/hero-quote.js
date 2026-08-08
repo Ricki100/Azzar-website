@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const fenceType = form.fenceType.value;
     const perimeterSize = form.perimeterSize.value;
     const firstName = form.firstName.value.trim();
     const email = form.email.value.trim();
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/quote-request.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, email, perimeterSize })
+        body: JSON.stringify({ firstName, email, fenceType, perimeterSize })
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.success) throw new Error(data.message || 'quote_request_failed');
@@ -59,9 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
         successEl.hidden = false;
         successEl.textContent = `Thanks — we've got your details and will be in touch about your ${perimeterSize.toLowerCase()} perimeter shortly.`;
       }
-      track('generate_lead', { form_type: 'hero_quick_quote', perimeter_size: perimeterSize });
+      track('generate_lead', {
+        form_type: 'hero_quick_quote',
+        fence_type: fenceType,
+        perimeter_size: perimeterSize
+      });
     } catch (error) {
-      const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hello Azzar, I'd like a quote for a ${perimeterSize || 'fencing'} perimeter. Name: ${firstName}`)}`;
+      const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hello Azzar, I'd like a quote for ${fenceType || 'fencing'} (${perimeterSize || 'size not specified'}). Name: ${firstName}`)}`;
       setStatus(`Something went wrong sending that. Try again, or <a href="${waLink}" target="_blank" rel="noopener">message us on WhatsApp</a> instead.`, 'is-error', true);
       submitBtn.disabled = false;
       if (submitLabel) submitLabel.textContent = 'Get a Quote';
