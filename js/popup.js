@@ -1,7 +1,15 @@
 /* ============================================
    AZZAR FENCING AND STEEL — Lead Magnet Popup
-   Homepage newsletter/guide signup → Brevo
+   Homepage newsletter/guide signup → Make.com webhook relay → Brevo
+   (primary), Web3Forms email (automatic fallback if Make fails).
+   Same architecture as js/gate-quote.js. The welcome/guide email itself is
+   still sent by a Brevo automation on the "Azzar Homepage Leads" list —
+   this just needs to get the contact onto that list reliably.
    ============================================ */
+
+const POPUP_RELAY_WEBHOOK_URL = 'https://hook.eu1.make.com/shr3g17dxjjxjlmsp0ri3nfsmd6k4kx7';
+const POPUP_WEB3FORMS_ACCESS_KEY = '35b5e383-69c4-4981-8d67-db92ccfb81d4';
+const POPUP_WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
 document.addEventListener('DOMContentLoaded', () => {
   const popup = document.querySelector('#leadPopup');
@@ -100,25 +108,48 @@ document.addEventListener('DOMContentLoaded', () => {
       if (submitLabel) submitLabel.textContent = 'Sending...';
       setStatus('', null);
 
-      try {
-        const response = await fetch('/api/subscribe.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ firstName, email, source: 'Homepage Popup', marketingConsent })
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok || !data.success) throw new Error(data.message || 'subscribe_failed');
-
+      const showSuccess = () => {
         localStorage.setItem(STORAGE_SUBSCRIBED, '1');
         form.hidden = true;
         if (successView) successView.hidden = false;
-        track('generate_lead', { form_type: 'homepage_popup' });
-      } catch (error) {
-        const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Hello Azzar, I tried to join the Azzar Club on your website.')}`;
-        setStatus(`Something went wrong sending that. Try again, or <a href="${waLink}" target="_blank" rel="noopener">message us on WhatsApp</a> instead.`, 'is-error', true);
-        submitBtn.disabled = false;
-        if (submitLabel) submitLabel.textContent = 'Join The Club';
-        track('form_submit_error', { form_type: 'homepage_popup' });
+      };
+
+      try {
+        const response = await fetch(POPUP_RELAY_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, email, marketingConsent, formType: 'homepage_popup' })
+        });
+        if (!response.ok) throw new Error('make_relay_failed');
+
+        showSuccess();
+        track('generate_lead', { form_type: 'homepage_popup', channel: 'make_brevo' });
+      } catch (primaryError) {
+        try {
+          const fallbackResponse = await fetch(POPUP_WEB3FORMS_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              access_key: POPUP_WEB3FORMS_ACCESS_KEY,
+              subject: `New Azzar Club Signup — ${firstName}`,
+              from_name: 'Azzar Website — Homepage Popup',
+              name: firstName,
+              email,
+              message: `New Azzar Club signup from the website (sent via fallback — Make relay was unreachable).\n\nName: ${firstName}\nEmail: ${email}\n\nNeeds manual add to the "Azzar Homepage Leads" Brevo list.`
+            })
+          });
+          const data = await fallbackResponse.json().catch(() => ({}));
+          if (!fallbackResponse.ok || !data.success) throw new Error(data.message || 'fallback_failed');
+
+          showSuccess();
+          track('generate_lead', { form_type: 'homepage_popup', channel: 'web3forms_fallback' });
+        } catch (fallbackError) {
+          const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Hello Azzar, I tried to join the Azzar Club on your website.')}`;
+          setStatus(`Something went wrong sending that. Try again, or <a href="${waLink}" target="_blank" rel="noopener">message us on WhatsApp</a> instead.`, 'is-error', true);
+          submitBtn.disabled = false;
+          if (submitLabel) submitLabel.textContent = 'Join The Club';
+          track('form_submit_error', { form_type: 'homepage_popup' });
+        }
       }
     });
   }

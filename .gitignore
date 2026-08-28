@@ -5,3 +5,6 @@ audit/
 # Secrets — never commit real API keys
 api/config.php
 
+
+# Local backup archive — never commit (230MB+)
+Azzar website.zip

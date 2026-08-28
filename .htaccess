@@ -25,7 +25,7 @@ RewriteRule ^(.*?)/?$ $1.html [L]
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; media-src 'self'; frame-src https://www.facebook.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.clarity.ms; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; media-src 'self'; frame-src https://www.facebook.com; connect-src 'self' https://blog.azzar.co.zw https://hook.eu1.make.com https://api.web3forms.com https://www.google-analytics.com https://analytics.google.com https://www.clarity.ms https://c.clarity.ms; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
 </IfModule>
 
 # Custom 404 (optional — point this at a real error page if/when one exists)

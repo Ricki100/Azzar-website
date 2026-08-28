@@ -1,7 +1,14 @@
 /* ============================================
    AZZAR FENCING AND STEEL — Hero Quick Quote
-   Perimeter size + first name + email → Brevo
+   Perimeter size + first name + email → Make.com webhook relay → Brevo
+   (primary), Web3Forms email (automatic fallback if Make fails).
+   Same architecture as js/gate-quote.js — see that file for the full
+   rationale. No API key lives in this file for the primary path.
    ============================================ */
+
+const HERO_RELAY_WEBHOOK_URL = 'https://hook.eu1.make.com/shr3g17dxjjxjlmsp0ri3nfsmd6k4kx7';
+const HERO_WEB3FORMS_ACCESS_KEY = '35b5e383-69c4-4981-8d67-db92ccfb81d4';
+const HERO_WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('#heroQuoteForm');
@@ -46,31 +53,55 @@ document.addEventListener('DOMContentLoaded', () => {
     if (submitLabel) submitLabel.textContent = 'Sending...';
     setStatus('', null);
 
-    try {
-      const response = await fetch('/api/quote-request.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, email, fenceType, perimeterSize })
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok || !data.success) throw new Error(data.message || 'quote_request_failed');
-
+    const showSuccess = () => {
       if (row) row.hidden = true;
       if (successEl) {
         successEl.hidden = false;
         successEl.textContent = `Thanks — we've got your details and will be in touch about your ${perimeterSize.toLowerCase()} perimeter shortly.`;
       }
+    };
+
+    try {
+      const response = await fetch(HERO_RELAY_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, email, fenceType, perimeterSize, formType: 'hero_quick_quote' })
+      });
+      if (!response.ok) throw new Error('make_relay_failed');
+
+      showSuccess();
       track('generate_lead', {
         form_type: 'hero_quick_quote',
         fence_type: fenceType,
-        perimeter_size: perimeterSize
+        perimeter_size: perimeterSize,
+        channel: 'make_brevo'
       });
-    } catch (error) {
-      const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hello Azzar, I'd like a quote for ${fenceType || 'fencing'} (${perimeterSize || 'size not specified'}). Name: ${firstName}`)}`;
-      setStatus(`Something went wrong sending that. Try again, or <a href="${waLink}" target="_blank" rel="noopener">message us on WhatsApp</a> instead.`, 'is-error', true);
-      submitBtn.disabled = false;
-      if (submitLabel) submitLabel.textContent = 'Get a Quote';
-      track('form_submit_error', { form_type: 'hero_quick_quote' });
+    } catch (primaryError) {
+      try {
+        const fallbackResponse = await fetch(HERO_WEB3FORMS_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: HERO_WEB3FORMS_ACCESS_KEY,
+            subject: `New Quotation Request — ${firstName}`,
+            from_name: 'Azzar Website — Hero Quick Quote',
+            name: firstName,
+            email,
+            message: `New quote request from the website (sent via fallback — Make relay was unreachable).\n\nName: ${firstName}\nEmail: ${email}\nFence type: ${fenceType}\nPerimeter size: ${perimeterSize}`
+          })
+        });
+        const data = await fallbackResponse.json().catch(() => ({}));
+        if (!fallbackResponse.ok || !data.success) throw new Error(data.message || 'fallback_failed');
+
+        showSuccess();
+        track('generate_lead', { form_type: 'hero_quick_quote', channel: 'web3forms_fallback' });
+      } catch (fallbackError) {
+        const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hello Azzar, I'd like a quote for ${fenceType || 'fencing'} (${perimeterSize || 'size not specified'}). Name: ${firstName}`)}`;
+        setStatus(`Something went wrong sending that. Try again, or <a href="${waLink}" target="_blank" rel="noopener">message us on WhatsApp</a> instead.`, 'is-error', true);
+        submitBtn.disabled = false;
+        if (submitLabel) submitLabel.textContent = 'Get a Quote';
+        track('form_submit_error', { form_type: 'hero_quick_quote' });
+      }
     }
   });
 });
