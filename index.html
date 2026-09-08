@@ -29,7 +29,7 @@
   <meta property="og:url" content="https://azzar.co.zw" />
   <meta property="og:type" content="website" />
   <link rel="canonical" href="https://azzar.co.zw/" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260908-2" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -91,7 +91,6 @@
   </div>
 </div>
         <a href="projects" class="nav__link">Projects</a>
-        <a href="blog/" class="nav__link">Blog</a>
         <a href="about" class="nav__link">About</a>
         <a href="faq" class="nav__link">FAQ</a>
       </div>
@@ -138,7 +137,6 @@
   </div>
 </div>
       <a href="projects" class="nav__mobile-link">Projects</a>
-      <a href="blog/" class="nav__mobile-link">Blog</a>
       <a href="about" class="nav__mobile-link">About</a>
       <a href="faq" class="nav__mobile-link">FAQ</a>
     </div>
@@ -490,8 +488,8 @@
         <a href="blog/" class="btn btn-dark">View All Articles</a>
       </div>
 
-      <section data-cms-blog data-page-size="3" data-pagination="false" hidden>
-        <div data-cms-blog-grid></div>
+      <section data-cms-blog data-carousel="true" hidden>
+        <div data-cms-blog-grid tabindex="0" aria-label="Latest articles"></div>
       </section>
 
       <noscript>
@@ -664,7 +662,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.min.js"></script>
   <script src="assets/js/supabase-config.js"></script>
-  <script src="assets/js/cms-public.js"></script>
+  <script src="assets/js/cms-public.js?v=20260908-3"></script>
   <script src="js/main.js"></script>
   <script src="js/popup.js"></script>
   <script src="js/hero-quote.js"></script>

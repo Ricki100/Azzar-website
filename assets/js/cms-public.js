@@ -214,12 +214,84 @@
       <button type="button" data-cms-page="next"${page >= pageCount ? ' disabled' : ''}>Next</button>`;
   }
 
+  function setupBlogCarousel(section, track, itemCount) {
+    let controls = section.querySelector('[data-cms-carousel-controls]');
+    if (!controls) {
+      controls = document.createElement('nav');
+      controls.className = 'blog-carousel-controls';
+      controls.dataset.cmsCarouselControls = '';
+      controls.setAttribute('aria-label', 'Article carousel controls');
+      track.after(controls);
+    }
+
+    let page = 0;
+    let pageCount = 1;
+    let timer = null;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const cardsPerPage = () => window.innerWidth <= 640 ? 1 : window.innerWidth <= 960 ? 2 : 3;
+    const paintControls = () => {
+      pageCount = Math.max(1, Math.ceil(itemCount / cardsPerPage()));
+      page = Math.min(page, pageCount - 1);
+      const disabled = pageCount === 1 ? ' disabled' : '';
+      controls.innerHTML = `<button type="button" class="blog-carousel-arrow" data-carousel-prev aria-label="Previous articles"${disabled}>&#8592;</button>
+        <div class="blog-carousel-dots" role="group" aria-label="Choose article page">${Array.from({ length: pageCount }, (_, index) => `<button type="button" class="blog-carousel-dot${index === page ? ' is-active' : ''}" data-carousel-page="${index}" aria-label="Show article page ${index + 1}"${index === page ? ' aria-current="true"' : ''}></button>`).join('')}</div>
+        <button type="button" class="blog-carousel-arrow" data-carousel-next aria-label="Next articles"${disabled}>&#8594;</button>`;
+      controls.hidden = false;
+    };
+    const goTo = (nextPage, smooth = true) => {
+      page = (nextPage + pageCount) % pageCount;
+      const pageOffset = pageCount > 1 ? (track.scrollWidth - track.clientWidth) / (pageCount - 1) : 0;
+      track.scrollTo({ left: page * pageOffset, behavior: smooth && !reduceMotion ? 'smooth' : 'auto' });
+      paintControls();
+    };
+    const stop = () => { if (timer) window.clearInterval(timer); timer = null; };
+    const start = () => {
+      stop();
+      if (!reduceMotion && pageCount > 1) timer = window.setInterval(() => goTo(page + 1), 5500);
+    };
+
+    paintControls();
+    controls.addEventListener('click', (event) => {
+      const dot = event.target.closest('[data-carousel-page]');
+      if (dot) goTo(Number(dot.dataset.carouselPage));
+      else if (event.target.closest('[data-carousel-prev]')) goTo(page - 1);
+      else if (event.target.closest('[data-carousel-next]')) goTo(page + 1);
+      start();
+    });
+    track.addEventListener('scroll', () => {
+      window.requestAnimationFrame(() => {
+        const pageOffset = pageCount > 1 ? (track.scrollWidth - track.clientWidth) / (pageCount - 1) : 0;
+        const nextPage = pageOffset > 0 ? Math.min(pageCount - 1, Math.round(track.scrollLeft / pageOffset)) : 0;
+        if (nextPage !== page) { page = nextPage; paintControls(); }
+      });
+    }, { passive: true });
+    section.addEventListener('mouseenter', stop);
+    section.addEventListener('mouseleave', start);
+    section.addEventListener('focusin', stop);
+    section.addEventListener('focusout', start);
+    section.addEventListener('touchstart', stop, { passive: true });
+    window.addEventListener('resize', () => { paintControls(); goTo(page, false); });
+    start();
+  }
+
   async function renderBlogFeed(section, requestedPage = 1) {
     const track = section.querySelector('[data-cms-blog-grid]');
     if (!track) return;
+    const carousel = section.dataset.carousel === 'true';
     const pageSize = Math.min(24, Math.max(1, Number.parseInt(section.dataset.pageSize || '3', 10) || 3));
     const paginated = section.dataset.pagination === 'true';
     try {
+      if (carousel) {
+        const posts = await fetchPublished('blog');
+        if (!posts.length) return;
+        track.classList.add('is-carousel');
+        track.innerHTML = blogCards(posts);
+        activateMediaFallbacks(track);
+        section.hidden = false;
+        setupBlogCarousel(section, track, posts.length);
+        return;
+      }
       const initial = await fetchPublishedBlogPage(1, pageSize);
       if (!initial.posts.length) return;
       const pageCount = Math.max(1, Math.ceil(initial.total / pageSize));
