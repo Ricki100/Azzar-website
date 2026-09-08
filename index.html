@@ -91,6 +91,7 @@
   </div>
 </div>
         <a href="projects" class="nav__link">Projects</a>
+        <a href="blog/" class="nav__link">Blog</a>
         <a href="about" class="nav__link">About</a>
         <a href="faq" class="nav__link">FAQ</a>
       </div>
@@ -137,6 +138,7 @@
   </div>
 </div>
       <a href="projects" class="nav__mobile-link">Projects</a>
+      <a href="blog/" class="nav__mobile-link">Blog</a>
       <a href="about" class="nav__mobile-link">About</a>
       <a href="faq" class="nav__mobile-link">FAQ</a>
     </div>
@@ -485,17 +487,15 @@
           <h2 id="latestInsightsTitle">Latest From Our Blog</h2>
           <p>Practical guidance on fencing, gate automation, steel products and property security in Zimbabwe.</p>
         </div>
-        <a href="https://blog.azzar.co.zw/" class="btn btn-dark">View All Articles</a>
+        <a href="blog/" class="btn btn-dark">View All Articles</a>
       </div>
 
-      <div class="blog-grid" id="latestBlogPosts" data-stagger aria-live="polite" aria-busy="true">
-        <div class="blog-card blog-card--loading" aria-hidden="true"></div>
-        <div class="blog-card blog-card--loading" aria-hidden="true"></div>
-        <div class="blog-card blog-card--loading" aria-hidden="true"></div>
-      </div>
+      <section data-cms-blog data-page-size="3" data-pagination="false" hidden>
+        <div data-cms-blog-grid></div>
+      </section>
 
       <noscript>
-        <p class="blog-feed__fallback">Visit the <a href="https://blog.azzar.co.zw/">Azzar Blog</a> for our latest guides and advice.</p>
+        <p class="blog-feed__fallback">Visit the <a href="blog/">Azzar Blog</a> for our latest guides and advice.</p>
       </noscript>
     </div>
   </section>
@@ -662,6 +662,9 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.min.js"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/cms-public.js"></script>
   <script src="js/main.js"></script>
   <script src="js/popup.js"></script>
   <script src="js/hero-quote.js"></script>
