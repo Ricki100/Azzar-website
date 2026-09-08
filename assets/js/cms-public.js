@@ -4,6 +4,13 @@
   const config = window.CONTENT_CMS_SUPABASE || {};
   const configured = /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(config.url || '') &&
     !String(config.publishableKey || '').startsWith('YOUR_');
+  const localArticleCovers = {
+    'electric-gate-motors-zimbabwe-guide': '/images/real/electric-gate-motor/electric-gate-motor-installation-01.jpg'
+  };
+  const legacyArticleImages = {
+    'electric-gate-motor-d5-controller.jpg': '/images/real/electric-gate-motor/electric-gate-motor-d5-controller.jpg',
+    'electric-gate-motor-app-setup.jpg': '/images/real/electric-gate-motor/electric-gate-motor-app-setup.jpg'
+  };
 
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, (char) => ({
@@ -18,6 +25,16 @@
       const url = new URL(String(value).trim(), base);
       return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
     } catch (_) { return ''; }
+  }
+
+  function mediaUrl(value) {
+    const url = safeUrl(value);
+    if (!url) return '';
+    try {
+      const parsed = new URL(url);
+      const localPath = legacyArticleImages[parsed.pathname.split('/').pop()];
+      return localPath ? safeUrl(localPath) : url;
+    } catch (_) { return url; }
   }
 
   function googleDrivePreviewUrl(value) {
@@ -58,14 +75,14 @@
   function firstBodyImageUrl(html) {
     if (!html) return '';
     const doc = new DOMParser().parseFromString(String(html), 'text/html');
-    return safeUrl(doc.querySelector('img')?.getAttribute('src'));
+    return mediaUrl(doc.querySelector('img')?.getAttribute('src'));
   }
 
   function sanitiseRichText(html, promotedImageUrl = '') {
     const doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
     if (promotedImageUrl) {
       const promotedImage = [...doc.querySelectorAll('img')]
-        .find((image) => safeUrl(image.getAttribute('src')) === promotedImageUrl);
+        .find((image) => mediaUrl(image.getAttribute('src')) === promotedImageUrl);
       (promotedImage?.closest('figure') || promotedImage)?.remove();
     }
     doc.querySelectorAll('script,style,object,embed,form,input,button').forEach((node) => node.remove());
@@ -84,6 +101,8 @@
         const name = attribute.name.toLowerCase();
         if (name.startsWith('on') || (['href', 'src'].includes(name) && !safeUrl(attribute.value))) {
           node.removeAttribute(attribute.name);
+        } else if (name === 'src' && node.tagName === 'IMG') {
+          node.setAttribute(attribute.name, mediaUrl(attribute.value));
         }
       });
     });
@@ -102,14 +121,14 @@
 
   function mediaMarkup(item, className, fallbackImage = '') {
     const video = safeUrl(item.video_url);
-    const cover = safeUrl(item.cover_url) || safeUrl(fallbackImage);
+    const cover = mediaUrl(item.cover_url) || mediaUrl(fallbackImage);
     if (video) return `<video class="${className}" controls preload="metadata" playsinline${cover ? ` poster="${escapeHtml(cover)}"` : ''}><source src="${escapeHtml(video)}"></video>`;
     if (cover) return `<img class="${className}" src="${escapeHtml(cover)}" alt="${escapeHtml(item.title)}" loading="lazy">`;
     return `<div class="${className} cms-media-placeholder" aria-hidden="true"></div>`;
   }
 
   function cardMediaMarkup(item, className) {
-    const cover = safeUrl(item.cover_url);
+    const cover = mediaUrl(item.cover_url);
     const bodyImage = cover ? '' : firstBodyImageUrl(item.body_html);
     const image = cover || bodyImage;
     if (image) return `<img class="${className}" src="${escapeHtml(image)}" alt="${escapeHtml(item.title)}" loading="lazy">`;
@@ -261,7 +280,9 @@
       if (config.siteUrl) canonical.href = `${String(config.siteUrl).replace(/\/$/, '')}${blogPostUrl(item.slug)}`;
       if (location.pathname.endsWith('/post.html')) history.replaceState({}, '', blogPostUrl(item.slug));
       const related = (await fetchPublished('blog', { limit: 4 })).filter((post) => post.slug !== item.slug).slice(0, 3);
-      const promotedImage = !safeUrl(item.cover_url) && !safeUrl(item.video_url) ? firstBodyImageUrl(item.body_html) : '';
+      const promotedImage = !safeUrl(item.cover_url) && !safeUrl(item.video_url)
+        ? mediaUrl(localArticleCovers[item.slug]) || firstBodyImageUrl(item.body_html)
+        : '';
       article.innerHTML = `<header class="post-header"><p class="eyebrow">${escapeHtml((item.tags || []).join(' · ') || 'Insight')}</p><h1>${escapeHtml(item.title)}</h1><p class="post-deck">${escapeHtml(item.excerpt || '')}</p><time>${new Date(item.published_at).toLocaleDateString('en-ZW', { day: 'numeric', month: 'long', year: 'numeric' })}</time></header>
         <div class="post-lead-media">${mediaMarkup(item, 'post-media', promotedImage)}</div>
         <div class="post-body">${sanitiseRichText(item.body_html, promotedImage)}</div>
