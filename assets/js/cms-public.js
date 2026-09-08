@@ -55,8 +55,19 @@
     });
   }
 
-  function sanitiseRichText(html) {
+  function firstBodyImageUrl(html) {
+    if (!html) return '';
+    const doc = new DOMParser().parseFromString(String(html), 'text/html');
+    return safeUrl(doc.querySelector('img')?.getAttribute('src'));
+  }
+
+  function sanitiseRichText(html, promotedImageUrl = '') {
     const doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
+    if (promotedImageUrl) {
+      const promotedImage = [...doc.querySelectorAll('img')]
+        .find((image) => safeUrl(image.getAttribute('src')) === promotedImageUrl);
+      (promotedImage?.closest('figure') || promotedImage)?.remove();
+    }
     doc.querySelectorAll('script,style,object,embed,form,input,button').forEach((node) => node.remove());
     doc.querySelectorAll('iframe').forEach((frame) => {
       const src = googleDrivePreviewUrl(frame.getAttribute('src'));
@@ -89,9 +100,9 @@
     return doc.body.innerHTML;
   }
 
-  function mediaMarkup(item, className) {
+  function mediaMarkup(item, className, fallbackImage = '') {
     const video = safeUrl(item.video_url);
-    const cover = safeUrl(item.cover_url);
+    const cover = safeUrl(item.cover_url) || safeUrl(fallbackImage);
     if (video) return `<video class="${className}" controls preload="metadata" playsinline${cover ? ` poster="${escapeHtml(cover)}"` : ''}><source src="${escapeHtml(video)}"></video>`;
     if (cover) return `<img class="${className}" src="${escapeHtml(cover)}" alt="${escapeHtml(item.title)}" loading="lazy">`;
     return `<div class="${className} cms-media-placeholder" aria-hidden="true"></div>`;
@@ -99,11 +110,7 @@
 
   function cardMediaMarkup(item, className) {
     const cover = safeUrl(item.cover_url);
-    let bodyImage = '';
-    if (!cover && item.body_html) {
-      const doc = new DOMParser().parseFromString(String(item.body_html), 'text/html');
-      bodyImage = safeUrl(doc.querySelector('img')?.getAttribute('src'));
-    }
+    const bodyImage = cover ? '' : firstBodyImageUrl(item.body_html);
     const image = cover || bodyImage;
     if (image) return `<img class="${className}" src="${escapeHtml(image)}" alt="${escapeHtml(item.title)}" loading="lazy">`;
     return `<div class="${className} cms-media-placeholder" aria-hidden="true"></div>`;
@@ -254,9 +261,10 @@
       if (config.siteUrl) canonical.href = `${String(config.siteUrl).replace(/\/$/, '')}${blogPostUrl(item.slug)}`;
       if (location.pathname.endsWith('/post.html')) history.replaceState({}, '', blogPostUrl(item.slug));
       const related = (await fetchPublished('blog', { limit: 4 })).filter((post) => post.slug !== item.slug).slice(0, 3);
+      const promotedImage = !safeUrl(item.cover_url) && !safeUrl(item.video_url) ? firstBodyImageUrl(item.body_html) : '';
       article.innerHTML = `<header class="post-header"><p class="eyebrow">${escapeHtml((item.tags || []).join(' · ') || 'Insight')}</p><h1>${escapeHtml(item.title)}</h1><p class="post-deck">${escapeHtml(item.excerpt || '')}</p><time>${new Date(item.published_at).toLocaleDateString('en-ZW', { day: 'numeric', month: 'long', year: 'numeric' })}</time></header>
-        <div class="post-lead-media">${mediaMarkup(item, 'post-media')}</div>
-        <div class="post-body">${sanitiseRichText(item.body_html)}</div>
+        <div class="post-lead-media">${mediaMarkup(item, 'post-media', promotedImage)}</div>
+        <div class="post-body">${sanitiseRichText(item.body_html, promotedImage)}</div>
         ${related.length ? `<aside class="related-posts"><div class="related-posts-header"><h2>Keep reading</h2><a href="/blog/">View all articles</a></div><div class="related-posts-grid">${related.map((post) => `<a class="related-post-card" href="${blogPostUrl(post.slug)}">${cardMediaMarkup(post, 'related-post-media')}<span>${escapeHtml(post.title)}</span></a>`).join('')}</div></aside>` : ''}`;
     } catch (_) { article.innerHTML = '<p class="cms-empty">This article could not be found.</p>'; }
   }
