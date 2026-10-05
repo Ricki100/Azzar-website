@@ -17,6 +17,7 @@
     for (var i = 0; i < arguments.length; i++) {
       var item = arguments[i];
       if (item && typeof item === 'object' && typeof item.event === 'string' &&
+          item.event.indexOf('gtm.') !== 0 &&
           Object.prototype.toString.call(item) === '[object Object]') {
         var params = {};
         for (var k in item) { if (k !== 'event') params[k] = item[k]; }
