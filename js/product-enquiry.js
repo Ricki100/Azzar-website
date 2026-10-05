@@ -81,11 +81,7 @@
       </div>
       <div class="contact-form product-enquiry-card">
         <form class="product-enquiry-form" novalidate>
-          <input type="hidden" name="access_key" value="${WEB3FORMS_ACCESS_KEY}">
-          <input type="hidden" name="subject" value="New ${escapeHtml(product.name)} Enquiry — Azzar Website">
-          <input type="hidden" name="from_name" value="Azzar Product Enquiry">
           <input type="hidden" name="product" value="${escapeHtml(product.name)}">
-          <input type="hidden" name="source_page" value="${escapeHtml(location.pathname)}">
           <input type="hidden" name="consent_recorded" value="">
           <input type="checkbox" name="botcheck" class="product-enquiry-honeypot" tabindex="-1" autocomplete="off">
           <div class="form-row">
@@ -185,7 +181,21 @@
       form.elements.consent_recorded.value = consentRecorded;
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
-      formData.set('subject', `New ${product.name} enquiry — ${data.full_name}`);
+      if (data.botcheck) return;
+      const emailData = new FormData();
+      emailData.set('access_key', WEB3FORMS_ACCESS_KEY);
+      emailData.set('subject', `New ${product.name} enquiry — ${data.full_name}`);
+      emailData.set('from_name', 'Azzar Product Enquiry');
+      emailData.set('name', data.full_name);
+      emailData.set('email', data.email);
+      emailData.set('Phone / WhatsApp', data.phone);
+      emailData.set('Product', product.name);
+      emailData.set('Project location', data.location);
+      emailData.set(product.needLabel, data.requirement);
+      emailData.set(product.sizeLabel, data.project_size);
+      emailData.set('Timeline', data.timeline || 'Not specified');
+      emailData.set('Additional details', data.details || 'None provided');
+      emailData.set('Consent record', consentRecorded);
       const payload = {
         fullName: data.full_name,
         phone: data.phone,
@@ -210,7 +220,7 @@
       status.textContent = 'Please wait while we securely record your details.';
       track('product_quote_submit', { product: key });
 
-      const [emailResult, automationResult] = await Promise.allSettled([postWeb3Forms(formData), postMake(payload)]);
+      const [emailResult, automationResult] = await Promise.allSettled([postWeb3Forms(emailData), postMake(payload)]);
       const emailSaved = emailResult.status === 'fulfilled';
       const automationSaved = automationResult.status === 'fulfilled';
 
