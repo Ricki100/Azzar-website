@@ -4,6 +4,32 @@
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
+  /* Apache supplies clean extensionless URLs on the live site. When designers
+     open index.html directly from Windows, reproduce that routing with real
+     .html file targets so local navigation still works. */
+  if (window.location.protocol === 'file:') {
+    const scriptUrl = document.querySelector('script[src*="js/main.js"]')?.src || new URL('js/main.js', window.location.href).href;
+    const siteRoot = new URL('../', scriptUrl);
+    document.querySelectorAll('a[href]').forEach(link => {
+      const rawHref = link.getAttribute('href');
+      if (!rawHref || /^(#|https?:|mailto:|tel:|javascript:)/i.test(rawHref)) return;
+
+      const parts = rawHref.match(/^([^?#]*)([?#].*)?$/);
+      const path = parts?.[1] || '';
+      const suffix = parts?.[2] || '';
+      if (!path) return;
+
+      const finalSegment = path.replace(/\/$/, '').split('/').pop() || '';
+      if (finalSegment.includes('.')) return;
+
+      const localPath = path.endsWith('/') ? `${path}index.html` : `${path}.html`;
+      const localUrl = path.startsWith('/')
+        ? new URL(localPath.slice(1), siteRoot)
+        : new URL(localPath, window.location.href);
+      link.href = `${localUrl.href}${suffix}`;
+    });
+  }
+
   const config = window.AZZAR_CONFIG || {};
   const attributionKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','gbraid','wbraid','fbclid'];
   const ATTRIBUTION_TTL_MS = 90 * 24 * 60 * 60 * 1000;
