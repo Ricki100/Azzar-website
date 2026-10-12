@@ -7,6 +7,16 @@ RewriteEngine On
 # Avoid Apache's MultiViews content negotiation interfering with the rules below
 Options -MultiViews
 
+# 0. One canonical host: send www.azzar.co.zw to azzar.co.zw (keeps Google and
+#    analytics on a single version of the site)
+RewriteCond %{HTTP_HOST} ^www\.azzar\.co\.zw$ [NC]
+RewriteRule ^(.*)$ https://azzar.co.zw/$1 [R=301,L]
+
+# 0b. Old URLs from the previous WordPress site that Google still shows
+RewriteRule ^646-2/?$ / [R=301,L]
+RewriteRule ^privacy-policy/?$ /privacy [R=301,L]
+RewriteRule ^author/ / [R=301,L]
+
 # 1. If someone requests /page.html directly, 301-redirect to /page
 #    (keeps a single canonical URL per page for SEO, avoids duplicate content)
 RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]

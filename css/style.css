@@ -303,7 +303,7 @@ p { line-height: 1.8; }
 .hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url('../images/real/clearvue/clearvue-residential-installation-02.jpeg');
+  background-image: url('../images/real/clearvue/clearvue-residential-installation-02.webp');
   background-size: cover;
   background-position: center;
   transform: scale(1.05);
@@ -1940,3 +1940,23 @@ body.popup-open { overflow: hidden; }
   [data-cms-blog-grid].is-carousel { scroll-behavior: auto; }
   .blog-carousel-dot { transition: background-color 200ms ease; }
 }
+
+
+/* ===== Floating WhatsApp button (added 2026-10-12) ===== */
+.wa-float {
+  position: fixed; right: 18px; bottom: 18px; z-index: 1500;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 18px 12px 14px; border-radius: 999px;
+  background: #25d366; color: #fff; text-decoration: none;
+  font-family: var(--font-body); font-weight: 600; font-size: 15px; line-height: 1;
+  box-shadow: 0 6px 20px rgba(0,0,0,.22);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.wa-float:hover, .wa-float:focus-visible { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.28); color: #fff; }
+.wa-float:focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; }
+body.popup-open .wa-float { display: none; }
+@media (max-width: 600px) {
+  .wa-float { right: 14px; bottom: 14px; padding: 13px; }
+  .wa-float__label { display: none; }
+}
+@media print { .wa-float { display: none; } }

@@ -5,7 +5,7 @@
   const configured = /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(config.url || '') &&
     !String(config.publishableKey || '').startsWith('YOUR_');
   const localArticleCovers = {
-    'electric-gate-motors-zimbabwe-guide': '/images/real/electric-gate-motor/electric-gate-motor-installation-01.jpg'
+    'electric-gate-motors-zimbabwe-guide': '/images/real/electric-gate-motor/electric-gate-motor-installation-01.webp'
   };
   const legacyArticleImages = {
     'electric-gate-motor-d5-controller.jpg': '/images/real/electric-gate-motor/electric-gate-motor-d5-controller.jpg',
