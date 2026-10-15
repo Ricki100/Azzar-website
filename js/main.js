@@ -213,40 +213,115 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---- Contact Form ---- */
-  const form = document.querySelector('.contact-form form');
+  /* ---- Contact Form ----
+     Contact-page quote form only (product pages use .contact-form for their own
+     enquiry card, handled in product-enquiry.js). Same delivery as the product
+     form: Web3Forms email + Make webhook in parallel, then WhatsApp hand-off.
+     The lead is counted as soon as either channel saves it. */
+  const form = document.querySelector('form[data-lead-form="quote"]');
   if (form) {
+    const CONTACT_MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/shr3g17dxjjxjlmsp0ri3nfsmd6k4kx7';
+    const CONTACT_WEB3FORMS_URL = 'https://api.web3forms.com/submit';
+    const CONTACT_WEB3FORMS_ACCESS_KEY = '35b5e383-69c4-4981-8d67-db92ccfb81d4';
+    const CONTACT_PRIVACY_VERSION = '2026-09-08';
+    const whatsappNumber = config.whatsappNumber || '263775752280';
+    const btn = form.querySelector('[type="submit"]');
+    const btnHtml = btn.innerHTML;
+    let status = form.querySelector('.contact-form-status');
+    if (!status) {
+      status = document.createElement('p');
+      status.className = 'contact-form-status';
+      status.setAttribute('role', 'status');
+      status.setAttribute('aria-live', 'polite');
+      btn.insertAdjacentElement('afterend', status);
+    }
+    let started = false;
+    form.addEventListener('input', () => {
+      if (started) return;
+      started = true;
+      track('quote_form_start', { form_type: 'quote_form' });
+    });
+
+    const whatsappLink = data => {
+      const lines = [
+        'Hello Azzar, I would like a quotation.', '',
+        `Name: ${data.full_name}`, `Phone: ${data.phone}`,
+        data.email ? `Email: ${data.email}` : '',
+        `Location: ${data.location}`,
+        data.product ? `Need: ${data.product}` : '',
+        data.project_size ? `Size: ${data.project_size}` : '',
+        data.details ? `Details: ${data.details}` : '', '',
+        'Please advise me on pricing and the next step.'
+      ];
+      const message = lines.filter((line, i) => line !== '' || i === 1 || i === lines.length - 2).join('\n');
+      return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    };
+
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const btn = form.querySelector('[type="submit"]');
-      btn.textContent = 'Sending...';
-      btn.disabled = true;
-      const formData = Object.fromEntries(new FormData(form).entries());
-      const lead = {
-        ...formData, ...attribution,
-        landing_page: localStorage.getItem('azzar_first_page') || '',
-        first_referrer: localStorage.getItem('azzar_first_referrer') || '',
-        current_page: window.location.href,
-        timestamp: new Date().toISOString(),
-        lead_stage: 'New Enquiry'
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const data = Object.fromEntries(new FormData(form).entries());
+      const consentRecorded = `Service enquiry submitted at ${new Date().toISOString()}; privacy notice version ${CONTACT_PRIVACY_VERSION}`;
+
+      const emailData = new FormData();
+      emailData.set('access_key', CONTACT_WEB3FORMS_ACCESS_KEY);
+      emailData.set('subject', `New quote request (contact page) — ${data.full_name}`);
+      emailData.set('from_name', 'Azzar Contact Page Quote');
+      emailData.set('name', data.full_name);
+      emailData.set('email', data.email);
+      emailData.set('Phone / WhatsApp', data.phone);
+      emailData.set('Location', data.location);
+      emailData.set('What they need', data.product || 'Not specified');
+      emailData.set('Approx. size', data.project_size || 'Not specified');
+      emailData.set('Additional details', data.details || 'None provided');
+      emailData.set('Email marketing opt-in', data.marketing_consent === 'yes' ? 'Yes' : 'No');
+      emailData.set('Consent record', consentRecorded);
+
+      const payload = {
+        fullName: data.full_name, phone: data.phone, email: data.email || '',
+        location: data.location, requirement: data.product || '', projectSize: data.project_size || '',
+        details: data.details || '', serviceConsent: data.service_consent,
+        marketingConsent: data.marketing_consent === 'yes', consentRecorded,
+        formType: 'contact_page_quote', submittedAt: new Date().toISOString(),
+        currentPage: window.location.href,
+        landingPage: localStorage.getItem('azzar_first_page') || '',
+        firstReferrer: localStorage.getItem('azzar_first_referrer') || '',
+        leadStage: 'New Enquiry', ...attribution
       };
-      try {
-        if (config.webhookUrl) {
-          const response = await fetch(config.webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) });
-          if (!response.ok) throw new Error('Webhook rejected the enquiry');
-          btn.textContent = 'Enquiry sent successfully';
-          form.reset();
-        } else {
-          const summary = Object.entries(formData).filter(([, value]) => value).map(([key, value]) => `${key}: ${value}`).join('\n');
-          window.open(`https://wa.me/${config.whatsappNumber || '263775752280'}?text=${encodeURIComponent(`Hello Azzar, I would like a quotation.\n\n${summary}`)}`, '_blank', 'noopener');
-          btn.textContent = 'Continue in WhatsApp';
-        }
-        track('generate_lead', { form_type: 'quote_form', product: formData.product || '' });
-      } catch (error) {
-        btn.textContent = 'Try again or use WhatsApp';
-        btn.disabled = false;
-        track('form_submit_error', { form_type: 'quote_form' });
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      status.classList.remove('is-error');
+      status.textContent = 'Please wait while we save your enquiry.';
+
+      const postEmail = async () => {
+        const r = await fetch(CONTACT_WEB3FORMS_URL, { method: 'POST', body: emailData });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || !j.success) throw new Error('email_delivery_failed');
+      };
+      const postMake = async () => {
+        const r = await fetch(CONTACT_MAKE_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (!r.ok) throw new Error('automation_delivery_failed');
+      };
+      const [emailResult, makeResult] = await Promise.allSettled([postEmail(), postMake()]);
+      const emailSaved = emailResult.status === 'fulfilled';
+      const makeSaved = makeResult.status === 'fulfilled';
+      const waUrl = whatsappLink(data);
+
+      if (emailSaved || makeSaved) {
+        const channel = emailSaved && makeSaved ? 'email_automation_whatsapp' : emailSaved ? 'email_whatsapp' : 'automation_whatsapp';
+        track('generate_lead', { form_type: 'quote_form', product: data.product || '', channel });
+        status.textContent = 'Enquiry saved. Opening WhatsApp so you can chat to our team…';
+        btn.textContent = 'Enquiry saved';
+        window.location.assign(waUrl);
+        return;
       }
+
+      status.classList.add('is-error');
+      status.innerHTML = `We couldn’t save your enquiry. Please try again or <a href="${waUrl}">continue on WhatsApp</a>.`;
+      btn.disabled = false;
+      btn.innerHTML = btnHtml;
+      track('form_submit_error', { form_type: 'quote_form' });
     });
   }
 

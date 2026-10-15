@@ -72,9 +72,9 @@
       <div class="product-enquiry-copy">
         <span class="eyebrow">Free project enquiry</span>
         <h2>Get the right ${escapeHtml(product.name)} quote</h2>
-        <p>Tell us what you need and where the project is. We’ll save the details for our sales team, then open WhatsApp so you can continue the conversation immediately.</p>
+        <p>A few quick answers and you’re talking to our sales team on WhatsApp. Takes about a minute.</p>
         <ol class="product-enquiry-steps">
-          <li><span>1</span><div><strong>Share the essentials</strong><p>Contact, location, scale and intended use.</p></div></li>
+          <li><span>1</span><div><strong>Share the basics</strong><p>Your name, number, email, area and what you need.</p></div></li>
           <li><span>2</span><div><strong>Continue on WhatsApp</strong><p>Your answers are carried into a ready-to-send message.</p></div></li>
           <li><span>3</span><div><strong>Confirm the next step</strong><p>Our team can arrange pricing, delivery or a free site assessment.</p></div></li>
         </ol>
@@ -85,22 +85,26 @@
           <input type="hidden" name="consent_recorded" value="">
           <input type="checkbox" name="botcheck" class="product-enquiry-honeypot" tabindex="-1" autocomplete="off">
           <div class="form-row">
-            <div class="form-group"><label for="${fieldId('name')}">Full name *</label><input id="${fieldId('name')}" name="full_name" autocomplete="name" maxlength="120" required></div>
-            <div class="form-group"><label for="${fieldId('phone')}">Phone / WhatsApp *</label><input id="${fieldId('phone')}" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="0775 000 000" required></div>
+            <div class="form-group"><label for="${fieldId('name')}">Your name *</label><input id="${fieldId('name')}" name="full_name" autocomplete="name" maxlength="120" required></div>
+            <div class="form-group"><label for="${fieldId('phone')}">WhatsApp number *</label><input id="${fieldId('phone')}" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="0775 000 000" required></div>
           </div>
           <div class="form-row">
             <div class="form-group"><label for="${fieldId('email')}">Email address *</label><input id="${fieldId('email')}" name="email" type="email" autocomplete="email" maxlength="160" required></div>
-            <div class="form-group"><label for="${fieldId('location')}">Project location *</label><input id="${fieldId('location')}" name="location" autocomplete="address-level2" maxlength="140" placeholder="e.g. Harare, Bulawayo, Mashonaland" required></div>
+            <div class="form-group"><label for="${fieldId('location')}">Town or area *</label><input id="${fieldId('location')}" name="location" autocomplete="address-level2" maxlength="140" placeholder="e.g. Harare, Bulawayo" required></div>
           </div>
           <div class="form-row">
             <div class="form-group"><label for="${fieldId('need')}">${escapeHtml(product.needLabel)} *</label><select id="${fieldId('need')}" name="requirement" required>${optionMarkup(product.needOptions)}</select></div>
-            <div class="form-group"><label for="${fieldId('size')}">${escapeHtml(product.sizeLabel)} *</label><select id="${fieldId('size')}" name="project_size" required>${optionMarkup(product.sizeOptions)}</select></div>
+            <div class="form-group"><label for="${fieldId('size')}">${escapeHtml(product.sizeLabel)} <span class="product-enquiry-optional">(optional)</span></label><select id="${fieldId('size')}" name="project_size">${optionMarkup(product.sizeOptions)}</select></div>
           </div>
-          <div class="form-group"><label for="${fieldId('timeline')}">When do you need it?</label><select id="${fieldId('timeline')}" name="timeline"><option value="">Choose an option</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–3 months</option><option>Planning and budgeting</option></select></div>
-          <div class="form-group"><label for="${fieldId('details')}">Anything else we should know?</label><textarea id="${fieldId('details')}" name="details" maxlength="1200" placeholder="Site conditions, preferred specification, delivery needs, drawings or other helpful detail."></textarea></div>
-          <label class="product-enquiry-consent"><input type="checkbox" name="service_consent" value="Yes" required><span>I ask Azzar to save these details and contact me about this enquiry by phone, email or WhatsApp. See the <a href="${privacyHref}">privacy notice</a>.</span></label>
-          <button type="submit" class="btn btn-primary product-enquiry-submit"><span>Save details &amp; open WhatsApp</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-          <p class="product-enquiry-note">No spam and no obligation. Required fields help us prepare a useful response.</p>
+          <details class="product-enquiry-more">
+            <summary>Add timing or notes (optional)</summary>
+            <div class="form-group"><label for="${fieldId('timeline')}">When do you need it?</label><select id="${fieldId('timeline')}" name="timeline"><option value="">Choose an option</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–3 months</option><option>Planning and budgeting</option></select></div>
+            <div class="form-group"><label for="${fieldId('details')}">Anything else?</label><textarea id="${fieldId('details')}" name="details" maxlength="1200" placeholder="Site conditions, specification, delivery needs…"></textarea></div>
+          </details>
+          <label class="product-enquiry-consent product-enquiry-consent--marketing"><input type="checkbox" name="marketing_consent" value="Yes"><span>Email me Azzar offers, price updates and fencing tips (optional, unsubscribe any time).</span></label>
+          <label class="product-enquiry-consent"><input type="checkbox" name="service_consent" value="Yes" required><span>Azzar may save these details and contact me about this enquiry. <a href="${privacyHref}">Privacy notice</a>.</span></label>
+          <button type="submit" class="btn btn-primary product-enquiry-submit"><span>Get my quote on WhatsApp</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+          <p class="product-enquiry-note">Free, no obligation, no spam.</p>
           <p class="product-enquiry-status" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -109,14 +113,17 @@
   }
 
   function whatsappUrl(product, data) {
-    const message = [
+    const lines = [
       `Hello Azzar, I would like a quote for ${product.name}.`, '',
-      `Name: ${data.full_name}`, `Phone: ${data.phone}`, `Email: ${data.email}`,
-      `Project location: ${data.location}`, `${product.needLabel}: ${data.requirement}`,
-      `${product.sizeLabel}: ${data.project_size}`, `Timeline: ${data.timeline || 'Not specified'}`,
-      `Additional details: ${data.details || 'None provided'}`, '',
+      `Name: ${data.full_name}`, `Phone: ${data.phone}`,
+      data.email ? `Email: ${data.email}` : '',
+      `Location: ${data.location}`, `${product.needLabel}: ${data.requirement}`,
+      data.project_size ? `${product.sizeLabel}: ${data.project_size}` : '',
+      data.timeline ? `Timeline: ${data.timeline}` : '',
+      data.details ? `Details: ${data.details}` : '', '',
       'Please advise me on pricing and the next step.'
-    ].join('\n');
+    ];
+    const message = lines.filter((line, i) => line !== '' || i === 1 || i === lines.length - 2).join('\n');
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   }
 
@@ -187,14 +194,15 @@
       emailData.set('subject', `New ${product.name} enquiry — ${data.full_name}`);
       emailData.set('from_name', 'Azzar Product Enquiry');
       emailData.set('name', data.full_name);
-      emailData.set('email', data.email);
+      if (data.email) emailData.set('email', data.email);
       emailData.set('Phone / WhatsApp', data.phone);
       emailData.set('Product', product.name);
       emailData.set('Project location', data.location);
       emailData.set(product.needLabel, data.requirement);
-      emailData.set(product.sizeLabel, data.project_size);
+      emailData.set(product.sizeLabel, data.project_size || 'Not specified');
       emailData.set('Timeline', data.timeline || 'Not specified');
       emailData.set('Additional details', data.details || 'None provided');
+      emailData.set('Email marketing opt-in', data.marketing_consent === 'Yes' ? 'Yes' : 'No');
       emailData.set('Consent record', consentRecorded);
       const payload = {
         fullName: data.full_name,
@@ -206,6 +214,7 @@
         timeline: data.timeline,
         details: data.details,
         serviceConsent: data.service_consent,
+        marketingConsent: data.marketing_consent === 'Yes',
         consentRecorded,
         formType: 'product_page_enquiry', productKey: key,
         submittedAt: new Date().toISOString(), currentPage: location.href,
@@ -237,7 +246,7 @@
       status.classList.add('is-error');
       status.innerHTML = `We could not save the enquiry. Please try again or <a href="${directWhatsApp}">continue directly on WhatsApp</a>.`;
       submit.disabled = false;
-      submitLabel.textContent = 'Save details & open WhatsApp';
+      submitLabel.textContent = 'Get my quote on WhatsApp';
       track('form_submit_error', { form_type: 'product_page_enquiry', product: key });
     });
   });
