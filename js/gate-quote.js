@@ -15,7 +15,7 @@
    treatment — only Make-relayed leads do.
    ============================================ */
 
-const RELAY_WEBHOOK_URL = 'https://hook.eu1.make.com/shr3g17dxjjxjlmsp0ri3nfsmd6k4kx7';
+const RELAY_WEBHOOK_URL = 'https://hook.eu1.make.com/9lo21gf4zak31d2ojywbkgvh5tej4hwq';
 const WEB3FORMS_ACCESS_KEY = '35b5e383-69c4-4981-8d67-db92ccfb81d4';
 const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
