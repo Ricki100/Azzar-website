@@ -2,14 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://azzar.co.zw/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
   <url><loc>https://azzar.co.zw/about</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://azzar.co.zw/products</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://azzar.co.zw/products/</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
   <url><loc>https://azzar.co.zw/products/clearview-fencing</loc><priority>0.85</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/products/diamond-mesh</loc><priority>0.85</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/products/field-fence</loc><priority>0.85</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/products/razor-wire</loc><priority>0.85</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/products/barbed-wire</loc><priority>0.85</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/products/deformed-bars</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://azzar.co.zw/industries</loc><priority>0.85</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://azzar.co.zw/industries/</loc><priority>0.85</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/industries/farms-agriculture</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/industries/commercial-industrial</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/industries/residential</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
@@ -24,4 +24,7 @@
   <url><loc>https://azzar.co.zw/blog/</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
   <url><loc>https://azzar.co.zw/blog/electric-gate-motors-zimbabwe-guide/</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/blog/your-fence-is-only-layer-one-home-security-zimbabwe/</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://azzar.co.zw/blog/boundary-fence-security-checklist-zimbabwe/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://azzar.co.zw/blog/home-security-power-cuts-zimbabwe/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://azzar.co.zw/blog/security-property-value-zimbabwe-2026/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

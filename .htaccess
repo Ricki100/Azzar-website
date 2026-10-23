@@ -28,10 +28,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.html -f
 RewriteRule ^(.*?)/?$ $1.html [L]
 
-# 3. Blog posts: /blog/<slug>/ serves blog/post.html internally (post.html
-#    reads the slug back out of the URL and looks it up in Supabase).
+# 3. Blog posts: /blog/<slug>/ is served by blog/post.php, which fetches the
+#    post from Supabase on the server and writes the real title, description,
+#    canonical, schema and article text into blog/post.html (SEO, 23 Oct 2026).
 #    Slug pattern matches the schema.sql check constraint on content_items.slug.
-RewriteRule ^blog/([a-z0-9]+(?:-[a-z0-9]+)*)/?$ blog/post.html [L]
+RewriteRule ^blog/([a-z0-9]+(?:-[a-z0-9]+)*)/?$ blog/post.php [L]
 
 # Baseline browser security and privacy headers (requires mod_headers).
 <IfModule mod_headers.c>
