@@ -1,5 +1,6 @@
 /* Azzar analytics bootstrap — external file so the CSP (no inline scripts) allows it.
-   GA4 + Microsoft Clarity, and forwards site dataLayer events (generate_lead etc.) to GA4. */
+   GA4 + Microsoft Clarity + Meta Pixel, and forwards site dataLayer events (generate_lead etc.) to GA4.
+   generate_lead is also sent to Meta as Lead, and call / WhatsApp / email clicks as Contact. */
 (function () {
   'use strict';
 
@@ -9,6 +10,15 @@
   window.gtag = gtag;
   gtag('js', new Date());
   gtag('config', 'G-GCTRNZQF2Y');
+
+  // --- Meta Pixel (Azzar Steel, 1353042233345110). Loaded from this external file so the CSP allows it. ---
+  !function (f, b, e, v, n, t, s) {
+    if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+    if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+    t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+  }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+  window.fbq('init', '1353042233345110');
+  window.fbq('track', 'PageView');
 
   // Site scripts push {event: 'name', ...params} objects (GTM style). gtag.js ignores
   // those, so forward them to GA4 as real events.
@@ -22,6 +32,9 @@
         var params = {};
         for (var k in item) { if (k !== 'event') params[k] = item[k]; }
         gtag('event', item.event, params);
+        if (item.event === 'generate_lead') {
+          window.fbq('track', 'Lead', { content_name: params.form_type || 'website_form', content_category: params.product || '' });
+        }
       }
     }
     return originalPush.apply(null, arguments);
@@ -42,6 +55,8 @@
     var type = href.indexOf('tel:') === 0 ? 'phone_click'
       : /wa\.me|whatsapp/i.test(href) ? 'whatsapp_click'
       : href.indexOf('mailto:') === 0 ? 'email_click' : '';
-    if (type) gtag('event', type, { link_url: href, page_path: location.pathname });
+    if (!type) return;
+    gtag('event', type, { link_url: href, page_path: location.pathname });
+    window.fbq('track', 'Contact', { content_name: type });
   });
 })();
