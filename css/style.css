@@ -2014,3 +2014,4 @@ body.popup-open .wa-float { display: none; }
 .ms-form [aria-invalid="true"] { border-color: #b42318; }
 .ms-form .finder-consent + button[type="submit"] { margin-top: 22px; }
 @media (max-width: 560px) { .ms-choices { grid-template-columns: 1fr; } .ms-choice { min-height: 50px; } }
+.ms-hint { margin: -8px 0 14px; color: var(--muted); font-size: 0.85rem; }

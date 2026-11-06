@@ -54,7 +54,7 @@
   };
 
   const escapeHtml = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-  const choiceMarkup = (id, options) => options.map((option, i) => `<label class="ms-choice" for="${id}-${i}"><input type="radio" id="${id}-${i}" name="requirement" value="${escapeHtml(option)}"${i === 0 ? ' required' : ''}><span>${escapeHtml(option)}</span></label>`).join('');
+  const choiceMarkup = (id, name, options, required) => options.map((option, i) => `<label class="ms-choice" for="${id}-${i}"><input type="radio" id="${id}-${i}" name="${name}" value="${escapeHtml(option)}"${required && i === 0 ? ' required' : ''}><span>${escapeHtml(option)}</span></label>`).join('');
   const optionMarkup = options => `<option value="">Choose an option</option>${options.map(option => `<option>${escapeHtml(option)}</option>`).join('')}`;
   const track = (event, details = {}) => {
     window.dataLayer = window.dataLayer || [];
@@ -73,9 +73,9 @@
       <div class="product-enquiry-copy">
         <span class="eyebrow">Free project enquiry</span>
         <h2>Get the right ${escapeHtml(product.name)} quote</h2>
-        <p>Three quick steps and you’re talking to our sales team on WhatsApp. Takes about a minute.</p>
+        <p>One quick question at a time, then you’re talking to our sales team on WhatsApp. Takes about a minute.</p>
         <ol class="product-enquiry-steps">
-          <li><span>1</span><div><strong>Tell us what you need</strong><p>Tap an option, then add your area and rough size.</p></div></li>
+          <li><span>1</span><div><strong>Tell us what you need</strong><p>Tap your answers: what you need, rough size, area and timing.</p></div></li>
           <li><span>2</span><div><strong>Continue on WhatsApp</strong><p>Your answers are carried into a ready-to-send message.</p></div></li>
           <li><span>3</span><div><strong>Confirm the next step</strong><p>Our team can arrange pricing, delivery or a free site assessment.</p></div></li>
         </ol>
@@ -87,20 +87,29 @@
           <input type="checkbox" name="botcheck" class="product-enquiry-honeypot" tabindex="-1" autocomplete="off">
           <fieldset class="ms-step" data-step data-step-auto data-step-title="Your project">
             <legend class="ms-legend">${escapeHtml(product.needLabel)}</legend>
-            <div class="ms-choices">${choiceMarkup(fieldId('need'), product.needOptions)}</div>
+            <div class="ms-choices">${choiceMarkup(fieldId('need'), 'requirement', product.needOptions, true)}</div>
           </fieldset>
-          <fieldset class="ms-step" data-step data-step-title="Size and location">
-            <legend class="ms-legend">A little more about the job</legend>
-            <div class="form-group"><label for="${fieldId('size')}">${escapeHtml(product.sizeLabel)} <span class="product-enquiry-optional">(optional)</span></label><select id="${fieldId('size')}" name="project_size">${optionMarkup(product.sizeOptions)}</select></div>
+          <fieldset class="ms-step" data-step data-step-auto data-step-title="Size">
+            <legend class="ms-legend">${escapeHtml(product.sizeLabel)}</legend>
+            <p class="ms-hint">A rough idea is fine. Tap one, or press Next to skip.</p>
+            <div class="ms-choices">${choiceMarkup(fieldId('size'), 'project_size', product.sizeOptions, false)}</div>
+          </fieldset>
+          <fieldset class="ms-step" data-step data-step-title="Location">
+            <legend class="ms-legend">Where is the site?</legend>
             <div class="form-group"><label for="${fieldId('location')}">Town or area *</label><input id="${fieldId('location')}" name="location" autocomplete="address-level2" maxlength="140" placeholder="e.g. Harare, Bulawayo" required></div>
-            <div class="form-group"><label for="${fieldId('timeline')}">When do you need it? <span class="product-enquiry-optional">(optional)</span></label><select id="${fieldId('timeline')}" name="timeline"><option value="">Choose an option</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–3 months</option><option>Planning and budgeting</option></select></div>
           </fieldset>
-          <fieldset class="ms-step" data-step data-step-title="Your details">
-            <legend class="ms-legend">Where should we send your quote?</legend>
-            <div class="form-row">
-              <div class="form-group"><label for="${fieldId('name')}">Your name *</label><input id="${fieldId('name')}" name="full_name" autocomplete="name" maxlength="120" required></div>
-              <div class="form-group"><label for="${fieldId('phone')}">WhatsApp number *</label><input id="${fieldId('phone')}" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="0775 000 000" required></div>
-            </div>
+          <fieldset class="ms-step" data-step data-step-auto data-step-title="Timing">
+            <legend class="ms-legend">When do you need it?</legend>
+            <p class="ms-hint">Optional. Tap one, or press Next to skip.</p>
+            <div class="ms-choices">${choiceMarkup(fieldId('timeline'), 'timeline', ["As soon as possible", "Within 2–4 weeks", "Within 1–3 months", "Planning and budgeting"], false)}</div>
+          </fieldset>
+          <fieldset class="ms-step" data-step data-step-title="Name and number">
+            <legend class="ms-legend">Who should we send the quote to?</legend>
+            <div class="form-group"><label for="${fieldId('name')}">Your name *</label><input id="${fieldId('name')}" name="full_name" autocomplete="name" maxlength="120" required></div>
+            <div class="form-group"><label for="${fieldId('phone')}">WhatsApp number *</label><input id="${fieldId('phone')}" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="0775 000 000" required></div>
+          </fieldset>
+          <fieldset class="ms-step" data-step data-step-title="Confirm">
+            <legend class="ms-legend">Last step: your email</legend>
             <div class="form-group"><label for="${fieldId('email')}">Email address *</label><input id="${fieldId('email')}" name="email" type="email" autocomplete="email" maxlength="160" required></div>
             <details class="product-enquiry-more">
               <summary>Add notes (optional)</summary>
@@ -217,9 +226,9 @@
         email: data.email,
         location: data.location,
         requirement: data.requirement,
-        projectSize: data.project_size,
-        timeline: data.timeline,
-        details: data.details,
+        projectSize: data.project_size || "",
+        timeline: data.timeline || "",
+        details: data.details || "",
         serviceConsent: data.service_consent,
         marketingConsent: data.marketing_consent === 'Yes',
         consentRecorded,

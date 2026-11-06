@@ -166,29 +166,33 @@
                   <label class="ms-choice" for="q-need-9"><input type="radio" id="q-need-9" name="product" value="Not sure — need advice"><span>Not sure — need advice</span></label>
                 </div>
               </fieldset>
-              <fieldset class="ms-step" data-step data-step-title="Your project">
-                <legend class="ms-legend">A little more about the job</legend>
-                <div class="form-group"><label for="q-location">Location / Area *</label><input type="text" id="q-location" name="location" autocomplete="address-level2" placeholder="e.g. Harare, Farm in Mashonaland, Bulawayo..." required/></div>
-                <div class="form-group">
-                  <label for="q-size">Approx. Size / Length <span class="product-enquiry-optional">(optional)</span></label>
-                  <select id="q-size" name="project_size">
-                    <option value="">Select a range...</option>
-                    <option>Under 50 metres</option>
-                    <option>50 – 200 metres</option>
-                    <option>200 – 500 metres</option>
-                    <option>500m – 1km</option>
-                    <option>Over 1km</option>
-                    <option>Not sure</option>
-                  </select>
+              <fieldset class="ms-step" data-step data-step-auto data-step-title="Size">
+                <legend class="ms-legend">Roughly how big is the job?</legend>
+                <p class="ms-hint">A rough idea is fine. Tap one, or press Next to skip.</p>
+                <div class="ms-choices">
+                  <label class="ms-choice" for="q-size-0"><input type="radio" id="q-size-0" name="project_size" value="Under 50 metres"><span>Under 50 metres</span></label>
+                  <label class="ms-choice" for="q-size-1"><input type="radio" id="q-size-1" name="project_size" value="50 – 200 metres"><span>50 – 200 metres</span></label>
+                  <label class="ms-choice" for="q-size-2"><input type="radio" id="q-size-2" name="project_size" value="200 – 500 metres"><span>200 – 500 metres</span></label>
+                  <label class="ms-choice" for="q-size-3"><input type="radio" id="q-size-3" name="project_size" value="500m – 1km"><span>500m – 1km</span></label>
+                  <label class="ms-choice" for="q-size-4"><input type="radio" id="q-size-4" name="project_size" value="Over 1km"><span>Over 1km</span></label>
+                  <label class="ms-choice" for="q-size-5"><input type="radio" id="q-size-5" name="project_size" value="Not sure"><span>Not sure</span></label>
                 </div>
+              </fieldset>
+              <fieldset class="ms-step" data-step data-step-title="Location">
+                <legend class="ms-legend">Where is the site?</legend>
+                <div class="form-group"><label for="q-location">Location / Area *</label><input type="text" id="q-location" name="location" autocomplete="address-level2" placeholder="e.g. Harare, Farm in Mashonaland, Bulawayo..." required/></div>
+              </fieldset>
+              <fieldset class="ms-step" data-step data-step-title="Details">
+                <legend class="ms-legend">Anything we should know?</legend>
                 <div class="form-group"><label for="q-details">Additional Details <span class="product-enquiry-optional">(optional)</span></label><textarea id="q-details" name="details" placeholder="Type of property, livestock, security needs, timeline, etc."></textarea></div>
               </fieldset>
-              <fieldset class="ms-step" data-step data-step-title="Your details">
-                <legend class="ms-legend">Where should we send your quote?</legend>
-                <div class="form-row">
-                  <div class="form-group"><label for="q-name">Full Name *</label><input type="text" id="q-name" name="full_name" autocomplete="name" placeholder="Your full name" required/></div>
-                  <div class="form-group"><label for="q-phone">Phone / WhatsApp *</label><input type="tel" id="q-phone" name="phone" autocomplete="tel" placeholder="0775 xxx xxx" required/></div>
-                </div>
+              <fieldset class="ms-step" data-step data-step-title="Name and number">
+                <legend class="ms-legend">Who should we send the quote to?</legend>
+                <div class="form-group"><label for="q-name">Full Name *</label><input type="text" id="q-name" name="full_name" autocomplete="name" placeholder="Your full name" required/></div>
+                <div class="form-group"><label for="q-phone">Phone / WhatsApp *</label><input type="tel" id="q-phone" name="phone" autocomplete="tel" placeholder="0775 xxx xxx" required/></div>
+              </fieldset>
+              <fieldset class="ms-step" data-step data-step-title="Confirm">
+                <legend class="ms-legend">Last step: your email</legend>
                 <div class="form-group"><label for="q-email">Email Address *</label><input type="email" id="q-email" name="email" autocomplete="email" placeholder="your@email.com" required/></div>
                 <label class="finder-consent"><input type="checkbox" name="marketing_consent" value="yes"> <span>Email me Azzar offers, price updates and fencing tips (optional, unsubscribe any time).</span></label>
                 <label class="finder-consent"><input type="checkbox" name="service_consent" value="yes" required> <span>I agree that Azzar may contact me about this enquiry. See the <a href="privacy">privacy notice</a>.</span></label>
