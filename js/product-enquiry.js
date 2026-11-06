@@ -54,6 +54,7 @@
   };
 
   const escapeHtml = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  const choiceMarkup = (id, options) => options.map((option, i) => `<label class="ms-choice" for="${id}-${i}"><input type="radio" id="${id}-${i}" name="requirement" value="${escapeHtml(option)}"${i === 0 ? ' required' : ''}><span>${escapeHtml(option)}</span></label>`).join('');
   const optionMarkup = options => `<option value="">Choose an option</option>${options.map(option => `<option>${escapeHtml(option)}</option>`).join('')}`;
   const track = (event, details = {}) => {
     window.dataLayer = window.dataLayer || [];
@@ -72,40 +73,45 @@
       <div class="product-enquiry-copy">
         <span class="eyebrow">Free project enquiry</span>
         <h2>Get the right ${escapeHtml(product.name)} quote</h2>
-        <p>A few quick answers and you’re talking to our sales team on WhatsApp. Takes about a minute.</p>
+        <p>Three quick steps and you’re talking to our sales team on WhatsApp. Takes about a minute.</p>
         <ol class="product-enquiry-steps">
-          <li><span>1</span><div><strong>Share the basics</strong><p>Your name, number, email, area and what you need.</p></div></li>
+          <li><span>1</span><div><strong>Tell us what you need</strong><p>Tap an option, then add your area and rough size.</p></div></li>
           <li><span>2</span><div><strong>Continue on WhatsApp</strong><p>Your answers are carried into a ready-to-send message.</p></div></li>
           <li><span>3</span><div><strong>Confirm the next step</strong><p>Our team can arrange pricing, delivery or a free site assessment.</p></div></li>
         </ol>
       </div>
       <div class="contact-form product-enquiry-card">
-        <form class="product-enquiry-form" novalidate>
+        <form class="product-enquiry-form" data-multistep="product_page_enquiry" novalidate>
           <input type="hidden" name="product" value="${escapeHtml(product.name)}">
           <input type="hidden" name="consent_recorded" value="">
           <input type="checkbox" name="botcheck" class="product-enquiry-honeypot" tabindex="-1" autocomplete="off">
-          <div class="form-row">
-            <div class="form-group"><label for="${fieldId('name')}">Your name *</label><input id="${fieldId('name')}" name="full_name" autocomplete="name" maxlength="120" required></div>
-            <div class="form-group"><label for="${fieldId('phone')}">WhatsApp number *</label><input id="${fieldId('phone')}" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="0775 000 000" required></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label for="${fieldId('email')}">Email address *</label><input id="${fieldId('email')}" name="email" type="email" autocomplete="email" maxlength="160" required></div>
-            <div class="form-group"><label for="${fieldId('location')}">Town or area *</label><input id="${fieldId('location')}" name="location" autocomplete="address-level2" maxlength="140" placeholder="e.g. Harare, Bulawayo" required></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label for="${fieldId('need')}">${escapeHtml(product.needLabel)} *</label><select id="${fieldId('need')}" name="requirement" required>${optionMarkup(product.needOptions)}</select></div>
+          <fieldset class="ms-step" data-step data-step-auto data-step-title="Your project">
+            <legend class="ms-legend">${escapeHtml(product.needLabel)}</legend>
+            <div class="ms-choices">${choiceMarkup(fieldId('need'), product.needOptions)}</div>
+          </fieldset>
+          <fieldset class="ms-step" data-step data-step-title="Size and location">
+            <legend class="ms-legend">A little more about the job</legend>
             <div class="form-group"><label for="${fieldId('size')}">${escapeHtml(product.sizeLabel)} <span class="product-enquiry-optional">(optional)</span></label><select id="${fieldId('size')}" name="project_size">${optionMarkup(product.sizeOptions)}</select></div>
-          </div>
-          <details class="product-enquiry-more">
-            <summary>Add timing or notes (optional)</summary>
-            <div class="form-group"><label for="${fieldId('timeline')}">When do you need it?</label><select id="${fieldId('timeline')}" name="timeline"><option value="">Choose an option</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–3 months</option><option>Planning and budgeting</option></select></div>
-            <div class="form-group"><label for="${fieldId('details')}">Anything else?</label><textarea id="${fieldId('details')}" name="details" maxlength="1200" placeholder="Site conditions, specification, delivery needs…"></textarea></div>
-          </details>
-          <label class="product-enquiry-consent product-enquiry-consent--marketing"><input type="checkbox" name="marketing_consent" value="Yes"><span>Email me Azzar offers, price updates and fencing tips (optional, unsubscribe any time).</span></label>
-          <label class="product-enquiry-consent"><input type="checkbox" name="service_consent" value="Yes" required><span>Azzar may save these details and contact me about this enquiry. <a href="${privacyHref}">Privacy notice</a>.</span></label>
-          <button type="submit" class="btn btn-primary product-enquiry-submit"><span>Get my quote on WhatsApp</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-          <p class="product-enquiry-note">Free, no obligation, no spam.</p>
-          <p class="product-enquiry-status" role="status" aria-live="polite"></p>
+            <div class="form-group"><label for="${fieldId('location')}">Town or area *</label><input id="${fieldId('location')}" name="location" autocomplete="address-level2" maxlength="140" placeholder="e.g. Harare, Bulawayo" required></div>
+            <div class="form-group"><label for="${fieldId('timeline')}">When do you need it? <span class="product-enquiry-optional">(optional)</span></label><select id="${fieldId('timeline')}" name="timeline"><option value="">Choose an option</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–3 months</option><option>Planning and budgeting</option></select></div>
+          </fieldset>
+          <fieldset class="ms-step" data-step data-step-title="Your details">
+            <legend class="ms-legend">Where should we send your quote?</legend>
+            <div class="form-row">
+              <div class="form-group"><label for="${fieldId('name')}">Your name *</label><input id="${fieldId('name')}" name="full_name" autocomplete="name" maxlength="120" required></div>
+              <div class="form-group"><label for="${fieldId('phone')}">WhatsApp number *</label><input id="${fieldId('phone')}" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="0775 000 000" required></div>
+            </div>
+            <div class="form-group"><label for="${fieldId('email')}">Email address *</label><input id="${fieldId('email')}" name="email" type="email" autocomplete="email" maxlength="160" required></div>
+            <details class="product-enquiry-more">
+              <summary>Add notes (optional)</summary>
+              <div class="form-group"><label for="${fieldId('details')}">Anything else?</label><textarea id="${fieldId('details')}" name="details" maxlength="1200" placeholder="Site conditions, specification, delivery needs…"></textarea></div>
+            </details>
+            <label class="product-enquiry-consent product-enquiry-consent--marketing"><input type="checkbox" name="marketing_consent" value="Yes"><span>Email me Azzar offers, price updates and fencing tips (optional, unsubscribe any time).</span></label>
+            <label class="product-enquiry-consent"><input type="checkbox" name="service_consent" value="Yes" required><span>Azzar may save these details and contact me about this enquiry. <a href="${privacyHref}">Privacy notice</a>.</span></label>
+            <button type="submit" class="btn btn-primary product-enquiry-submit"><span>Get my quote on WhatsApp</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            <p class="product-enquiry-note">Free, no obligation, no spam.</p>
+            <p class="product-enquiry-status" role="status" aria-live="polite"></p>
+          </fieldset>
         </form>
       </div>
     </div>`;
@@ -147,6 +153,7 @@
     const product = products[key];
     if (!product) return;
     const form = buildForm(mount, key, product);
+    if (window.AzzarMultiStep) window.AzzarMultiStep.init(form);
     const submit = form.querySelector('.product-enquiry-submit');
     const submitLabel = submit.querySelector('span');
     const status = form.querySelector('.product-enquiry-status');
