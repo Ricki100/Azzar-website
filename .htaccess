@@ -28,6 +28,13 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.html -f
 RewriteRule ^(.*?)/?$ $1.html [L]
 
+# 3a. Blog posts rebuilt as guides (7 Nov 2026): 301 to the guide pages.
+RewriteRule ^blog/electric-gate-motors-zimbabwe-guide/?$ /guides/electric-gate-motors-zimbabwe-guide [R=301,L]
+RewriteRule ^blog/your-fence-is-only-layer-one-home-security-zimbabwe/?$ /guides/your-fence-is-only-layer-one-home-security-zimbabwe [R=301,L]
+RewriteRule ^blog/boundary-fence-security-checklist-zimbabwe/?$ /guides/boundary-fence-security-checklist-zimbabwe [R=301,L]
+RewriteRule ^blog/home-security-power-cuts-zimbabwe/?$ /guides/home-security-power-cuts-zimbabwe [R=301,L]
+RewriteRule ^blog/security-property-value-zimbabwe-2026/?$ /guides/security-property-value-zimbabwe-2026 [R=301,L]
+
 # 3. Blog posts: /blog/<slug>/ is served by blog/post.php, which fetches the
 #    post from Supabase on the server and writes the real title, description,
 #    canonical, schema and article text into blog/post.html (SEO, 23 Oct 2026).

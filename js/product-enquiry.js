@@ -44,6 +44,20 @@
       sizeLabel: 'Approximate fence length',
       sizeOptions: ['Under 200 metres', '200–500 metres', '500 metres–1 kilometre', '1–3 kilometres', 'Over 3 kilometres', 'Not sure yet']
     },
+    'gate-motor': {
+      name: 'Electric Gate Motor',
+      needLabel: 'What kind of gate is it?',
+      needOptions: ['Sliding gate', 'Swing gate (one leaf)', 'Swing gates (two leaves)', 'New gate and motor', 'Not sure—need advice'],
+      sizeLabel: 'Approximate gate width',
+      sizeOptions: ['Under 4 metres', '4–6 metres', '6–8 metres', 'Over 8 metres', 'Not sure yet']
+    },
+    'home-security': {
+      name: 'Perimeter Security',
+      needLabel: 'What do you need help with?',
+      needOptions: ['New fence or boundary', 'Upgrade or repair an existing fence', 'Razor wire or electric topping', 'Gate or gate motor', 'Full perimeter assessment', 'Not sure—need advice'],
+      sizeLabel: 'Approximate boundary length',
+      sizeOptions: ['Under 50 metres', '50–200 metres', '200–500 metres', '500 metres–1 kilometre', 'Over 1 kilometre', 'Not sure yet']
+    },
     'deformed-bars': {
       name: 'Deformed Bars & Steel',
       needLabel: 'Material requirement',

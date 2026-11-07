@@ -22,11 +22,6 @@
   <url><loc>https://azzar.co.zw/privacy</loc><priority>0.4</priority><changefreq>yearly</changefreq></url>
   <url><loc>https://azzar.co.zw/electric-gate-motor</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://azzar.co.zw/blog/</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://azzar.co.zw/blog/electric-gate-motors-zimbabwe-guide/</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://azzar.co.zw/blog/your-fence-is-only-layer-one-home-security-zimbabwe/</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://azzar.co.zw/blog/boundary-fence-security-checklist-zimbabwe/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://azzar.co.zw/blog/home-security-power-cuts-zimbabwe/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://azzar.co.zw/blog/security-property-value-zimbabwe-2026/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://azzar.co.zw/guides/</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://azzar.co.zw/guides/clearview-fencing-zimbabwe-guide</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://azzar.co.zw/guides/razor-wire-vs-barbed-wire</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -35,4 +30,9 @@
   <url><loc>https://azzar.co.zw/guides/mining-security-fencing-zimbabwe</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://azzar.co.zw/guides/deformed-bars-sizes-guide</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://azzar.co.zw/guides/choosing-a-fencing-company-zimbabwe</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://azzar.co.zw/guides/electric-gate-motors-zimbabwe-guide</loc><lastmod>2026-11-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://azzar.co.zw/guides/your-fence-is-only-layer-one-home-security-zimbabwe</loc><lastmod>2026-11-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://azzar.co.zw/guides/boundary-fence-security-checklist-zimbabwe</loc><lastmod>2026-11-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://azzar.co.zw/guides/home-security-power-cuts-zimbabwe</loc><lastmod>2026-11-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://azzar.co.zw/guides/security-property-value-zimbabwe-2026</loc><lastmod>2026-11-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
